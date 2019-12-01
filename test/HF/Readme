@@ -1,0 +1,5 @@
+README
+
+The executable script , sh_run, executes the different test runs in series, assuming
+the executable is in ..  (the previous directory).
+

@@ -1,0 +1,7 @@
+
+rm mchf_param bsw.inp
+spmchf << EOF > out8
+Ac 89
+1
+all
+EOF

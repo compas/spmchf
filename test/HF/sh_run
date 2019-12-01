@@ -1,0 +1,30 @@
+#!/bin/sh
+
+#   Test static correlation
+
+set -x
+
+for n in 1 2 3 4 5 8 6 
+do
+  cp Test$n.c cfg.inp
+  nonh
+  time run$n >>out
+  mv spmchf.log test$n.log
+  mv bsw.out test$n.bsw
+  mv fort.50 test$n.50
+done
+
+# use the last 3s3d  result as input for a CI calculation
+# including also 3p(2), varying only 3p in the SCF phase and then all.
+
+cp test6.bsw bsw.inp
+cp Test7.c cfg.inp
+nonh
+time spmchf varied1==1 varied2=all  << EOF > out7
+Mg 12
+1
+=1
+EOF
+mv spmchf.log test7.log
+mv bsw.out test7.bsw
+~

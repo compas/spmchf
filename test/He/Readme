@@ -1,0 +1,10 @@
+
+
+The executable script, sh_He, performs a series of calculations for natural 
+orbital epansions for He 1s(2),  n=1 to n=5. 
+
+It is assumed that the spmchf executable has been copied to the test directory.
+
+
+Charlotte Froese Fischer
+September, 2010

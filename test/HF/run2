@@ -1,0 +1,7 @@
+
+rm mchf_param  bsw.inp
+../spmchf << EOF > out2
+Li  3
+1
+all
+EOF

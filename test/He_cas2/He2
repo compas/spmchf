@@ -1,0 +1,52 @@
+
+
+       MCHF WAVE FUNCTIONS FOR      He Z =  2.0
+
+                 Core =
+       Other Orbitals =  1s  2s
+
+       Level 1: MCHF_parameters 
+       ----------------------
+          Step-size (h)                     0.12500
+          Spline order (ks)                       8
+          Size of basis  (ns)                    48
+          Maximum radius                      24.38
+          SCF convergence tolerance        1.00D-15
+          Orbital convergence tolerance    1.00D-08
+          Orbital tail cut-off             1.00D-08
+          Orbitals varied                        =1,
+           all
+
+
+               Some WaveFunction Properties
+
+    Term 1Se
+    Mean radius             =     1.86807632
+    Mean square radius      =     2.41792939
+    Mean R.R parameter      =     2.41792939
+    Isotope Shift parameter =     0.00000000
+
+       Convergence (latest difference)
+                SCF diff. =  3.086D-15
+            Orbital diff. =  1.673D-08
+            Tail cut-off  = -8.841D-08
+
+
+
+                        ATOM:    He   TERM(s): 1Se
+
+
+  nl        E(nl)         I(nl)         KE(nl)       S(nl)      Az(nl)      MAXR    MAXP
+  1s    -0.93629104    -1.94169863     1.42872269    0.392      4.762406      41      13
+  2s    -2.97368902     0.09558144     3.90554964   -2.754      7.243257      41       9
+
+
+  nl       Delta(r)        1/R**3        1/R          R          R**2          QSUM
+  1s       1.804858       0.000000     1.685211  0.93268823    1.203938   1.99173236D+00
+  2s       4.175013       0.000000     1.904984  1.26199890    2.426460   8.26763724D-03
+
+
+       TOTAL ENERGY (a.u.)            -2.877996814180156
+                     Kinetic           2.877996814773841
+                     Potential        -5.755993628953997
+                     Ratio            -1.999999999793716

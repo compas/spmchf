@@ -1,0 +1,39 @@
+#!/bin/sh
+
+set -x
+
+#   He 1s2 1S
+cp He1.c cfg.inp
+nonh
+
+rm mchf_param   bsw.inp              # remove for a new case
+time ../spmchf << EOF
+He 2
+1
+all
+EOF
+cp bsw.out He1.bsw
+cp 1Se.l   He1.l
+cp spmchf.log He1.log
+
+#                            Extend the cas for each n
+
+for n in 2 3 4 5 
+do
+
+mv bsw.out bsw.inp
+cp He$n.c cfg.inp
+nonh
+
+time ../spmchf varied1==1 varied2=all max_it1=3 << EOF  >out$n
+He 2
+1
+EOF
+                             # save the results
+cp bsw.out He$n.bsw
+cp 1Se.l   He$n.l
+cp spmchf.log He${n}.log
+cp fort.50  He$n.50
+
+done
+

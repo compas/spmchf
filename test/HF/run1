@@ -1,0 +1,7 @@
+
+rm mchf_param  bsw.inp
+time ../spmchf << EOF  >out1
+He  2
+1
+all
+EOF
