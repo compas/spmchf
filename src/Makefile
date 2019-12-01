@@ -9,16 +9,16 @@
 
 MODDIR = .
 
-#FC = gfortran
-#FC_FLAGS = -g
-#LAPXK_DIR = ??
+FC = gfortran
+FC_FLAGS = -g
+#LAPACK_DIR = -L <path_to_lapack and blas libs>
 
 install:  spmchf
 
 
 My_LIBS= spline_param.o spline_grid.o spline_galerkin.o spline_hl.o \
          spline_integrals.o spline_moments.o \
- 	 mchf_atomic_state.o orbitals.o memory_use.o block_param.o \
+			mchf_atomic_state.o orbitals.o memory_use.o block_param.o \
          mchf_inout.o angular.o av_energy.o  mchf_param.o cl_arguments.o\
          gauss.o vbsplvd.o mrm.o bxv.o hlm.o hlc.o azl.o\
          mrk_cell.o rk.o density.o \
@@ -35,13 +35,11 @@ My_APPS= spmchf.o read_mchf_param.o get_case.o get_atom.o intgrl.o \
          refine_grid.o  lagrange.o read_cl_param.o
 
 spmchf: $(My_LIBS) $(My_APPS) $(dvdson)
-	$(FC) -o spmchf $(FC_LD)  $(My_LIBS) $(My_APPS) $(dvdson) \
-        -L $(LAPACK_DIR) -llapack -lblas
+	$(FC) -o ../bin/spmchf $(FC_LD)  $(My_LIBS) $(My_APPS) $(dvdson) \
+        $(LAPACK_DIR) -llapack -lblas
 
 .f90.o:
 	$(FC) -c $(FC_FLAGS) $< -I $(MODDIR) -o $@
 
 clean:
 	-rm -f *.o core  *.mod
-
-
