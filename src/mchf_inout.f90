@@ -24,7 +24,7 @@
     INTEGER(4) :: ouf  = 31 !   output unit for bsw.out
     INTEGER(4) :: oul  = 32 !   output unit for bsw.l
     INTEGER(4) :: plt  = 33 !   plot.dat file (for plotting)
-   
+
 
     CONTAINS
 !====================================================================
@@ -37,50 +37,50 @@
 
     OPEN(UNIT=log, FILE='spmchf.log', STATUS='UNKNOWN', POSITION='asis')
 
-    INQUIRE(FILE='cfg.h', EXIST=OLD) 
+    INQUIRE(FILE='cfg.h', EXIST=OLD)
     IF (OLD) then
-      OPEN(UNIT=IUH, FILE='cfg.h', STATUS='OLD', FORM='FORMATTED') 
+      OPEN(UNIT=IUH, FILE='cfg.h', STATUS='OLD', FORM='FORMATTED')
     Else
       STOP 'OPEN_FILES: cfg.h file not found'
     End if
 
-    INQUIRE(FILE='cfg.inp', EXIST=OLD) 
+    INQUIRE(FILE='cfg.inp', EXIST=OLD)
     IF (OLD) then
-      OPEN(UNIT=IUC, FILE='cfg.inp', STATUS='OLD', FORM='FORMATTED') 
+      OPEN(UNIT=IUC, FILE='cfg.inp', STATUS='OLD', FORM='FORMATTED')
     Else
       STOP 'OPEN_FILES: cfg.inp file not found'
     End if
 
-    INQUIRE(FILE='bsw.inp', EXIST=OLD) 
+    INQUIRE(FILE='bsw.inp', EXIST=OLD)
     IF (OLD) &
-      OPEN(UNIT=IUF, FILE='bsw.inp', STATUS='OLD', FORM='UNFORMATTED') 
+      OPEN(UNIT=IUF, FILE='bsw.inp', STATUS='OLD', FORM='UNFORMATTED')
 
-    INQUIRE(FILE='mchf_param', EXIST=OLD) 
+    INQUIRE(FILE='mchf_param', EXIST=OLD)
     IF (OLD)  OPEN(UNIT=iup, FILE='mchf_param', STATUS='OLD', &
-                             FORM='FORMATTED') 
+                             FORM='FORMATTED')
 
-    INQUIRE(FILE='yint.lst', EXIST=OLD) 
+    INQUIRE(FILE='yint.lst', EXIST=OLD)
     IF (OLD) then
-        OPEN(UNIT=iuy, FILE='yint.lst', STATUS='OLD', FORM='UNFORMATTED') 
+        OPEN(UNIT=iuy, FILE='yint.lst', STATUS='OLD', FORM='UNFORMATTED')
     Else
        STOP 'OPEN_FILES: yint.lst file not found'
     End if
-  
-    INQUIRE(FILE='c.lst', EXIST=OLD) 
+
+    INQUIRE(FILE='c.lst', EXIST=OLD)
     IF (OLD) then
-        OPEN(UNIT=icl, FILE='c.lst', STATUS='OLD', FORM='UNFORMATTED') 
+        OPEN(UNIT=icl, FILE='c.lst', STATUS='OLD', FORM='UNFORMATTED')
     Else
        STOP 'OPEN_FILES: c.lst file not found'
     End if
-  
-    INQUIRE(FILE='ico.lst', EXIST=OLD) 
+
+    INQUIRE(FILE='ico.lst', EXIST=OLD)
     IF (OLD) then
-        OPEN(UNIT=iic, FILE='ico.lst', STATUS='OLD', FORM='UNFORMATTED') 
+        OPEN(UNIT=iic, FILE='ico.lst', STATUS='OLD', FORM='UNFORMATTED')
     Else
        STOP 'OPEN_FILES: ico.lst file not found'
     End if
-  
-    OPEN(UNIT=OUF, FILE='bsw.out', STATUS='UNKNOWN', FORM='UNFORMATTED') 
+
+    OPEN(UNIT=OUF, FILE='bsw.out', STATUS='UNKNOWN', FORM='UNFORMATTED')
     OPEN(UNIT=plt, FILE='plot.dat',STATUS='UNKNOWN')
     END subroutine open_files
 

@@ -73,7 +73,7 @@
 
 !   Call dpbsl(bsl,ks,ns,ks-1,coef)   ! LINPACK
 
-    Call dpbtrs ('U',ns,ks-1,1,bsl,ks,coef,ns,ierr)  
+    Call dpbtrs ('U',ns,ks-1,1,bsl,ks,coef,ns,ierr)
     if(ierr.ne.0) Stop 'bhwf:  dpbtrs (LAPACK) failed'
 
   END SUBROUTINE bhwf
@@ -117,7 +117,7 @@
      end do
     end do
 
-!    CALL dpbfa(bsl,ks,ns,ks-1,ierr)       
+!    CALL dpbfa(bsl,ks,ns,ks-1,ierr)
 !    if (ierr /= 0 ) STOP 'facsb: dpbfa (LINPACK) failed'
 
     Call DPBTRF('U',ns,ks-1,bsl,ks,ierr)

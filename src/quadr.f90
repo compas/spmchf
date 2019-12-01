@@ -8,7 +8,7 @@
 
       USE spline_param
       USE mchf_atomic_state
-      USE orbitals 
+      USE orbitals
       USE spline_galerkin
 
       IMPLICIT NONE
@@ -32,7 +32,7 @@
       else
          Call mrm(k,array)
       end if
-     
+
       ! type of symmetry is symmetric
       quadr = BVMV(ns,ks,array,'s',p(1,i),p(1,j))
 

@@ -2,9 +2,9 @@
        subroutine add_rkm_d(k,d,hd)
 !     ==================================================================
 !
-!	 Adds RK(.a,.b) to the matrix hd in symmetric banded form given 
+!	 Adds RK(.a,.b) to the matrix hd in symmetric banded form given
 !	 the density matrix d in symmetric banded form
-!            
+!
 !     ------------------------------------------------------------------
          USE spline_param, ONLY: ns, ks
          USE spline_integrals
@@ -14,7 +14,7 @@
          REAL(KIND=8), DIMENSION(ns,ks), INTENT(in) :: d
          REAL(KIND=8),DIMENSION(ns,ks),INTENT(inout):: hd
          INTEGER :: i,j,jth,ith
-  
+
          Call mrk_cell(k)
 	 ! Form the contribution in band matrix form
          do jth = 1, ks
@@ -34,12 +34,12 @@
        subroutine add_band_to_full(band,full)
 !     ==================================================================
 !
-!	Add the matrix hd in symmetric band form to 
+!	Add the matrix hd in symmetric band form to
 !       the matrix hfm in the symmetrci full matrix form
 !
 !     ------------------------------------------------------------------
          USE spline_param, ONLY: ns, ks
-         
+
          IMPLICIT NONE
          REAL(KIND=8), DIMENSION(ns,ks), INTENT(in) :: band
          REAL(KIND=8), DIMENSION(ns,ns), INTENT(inout) :: full
@@ -56,15 +56,15 @@
          do j = 1,ns
             full(j,j) =full(j,j) + band(j,ks)
          end do
-        
+
        END Subroutine add_band_to_full
-      
+
 
       !==================================================================
       subroutine add_rkm_x(k,dx,hfm)
       !==================================================================
-      ! 
-      !     Add the full symmetric matrix RK(.,a;b,.) to the  full 
+      !
+      !     Add the full symmetric matrix RK(.,a;b,.) to the  full
       !     symmetric matrix hfm given the density dx as a symmetric
       !     banded matrix
       !-----------------------------------------------
@@ -76,7 +76,7 @@
       REAL(KIND=8), DIMENSION(ns,ns), INTENT(in):: dx
       REAL(KIND=8), DIMENSION(ns,ns), INTENT(inout):: hfm
       INTEGER :: i,j,ith,jth, ms
-        
+
       Call mrk_cell(k)
 
       do j = ns,ns/2,-1
@@ -86,48 +86,48 @@
       print *, 'ms', ms
 
 !  .. j' >= j
-      do jth = 1, ks 
+      do jth = 1, ks
 !       .. i' >= i
-         do ith = 1, ks 
-            do j = 1, ms - jth + 1 
-               do i = 1, ms - ith + 1 
+         do ith = 1, ks
+            do j = 1, ms - jth + 1
+               do i = 1, ms - ith + 1
                 hfm(i,j) = hfm(i,j) + &
-		           rkb(i,j,ith,jth)*dx(i+ith-1,j+jth-1) 
-               end do 
-            end do 
-         end do 
+		           rkb(i,j,ith,jth)*dx(i+ith-1,j+jth-1)
+               end do
+            end do
+         end do
 !       .. i'<i
-         do ith = 2, ks 
-            do j = 1, ms - jth + 1 
-               do i = ith, ms 
+         do ith = 2, ks
+            do j = 1, ms - jth + 1
+               do i = ith, ms
                   hfm(i,j) = hfm(i,j) + rkb(i-ith+1,j,ith,jth)* &
-                                      dx(i-ith+1,j+jth-1) 
-               end do 
-            end do 
-         end do 
-      end do 
+                                      dx(i-ith+1,j+jth-1)
+               end do
+            end do
+         end do
+      end do
 !
 !  .. j' < j
-      do jth = 2, ks 
+      do jth = 2, ks
 !       .. i' >= i
-         do ith = 1, ks 
-            do j = jth, ms 
-               do i = 1, ms - ith + 1 
+         do ith = 1, ks
+            do j = jth, ms
+               do i = 1, ms - ith + 1
                   hfm(i,j) = hfm(i,j) + rkb(i,j-jth + 1,ith,jth)* &
-                                      dx(i+ith-1,j-jth+1) 
-               end do 
-            end do 
-         end do 
+                                      dx(i+ith-1,j-jth+1)
+               end do
+            end do
+         end do
 !       .. i'<i
-         do ith = 2, ks 
-            do j = jth, ms 
-               do i = ith, ms 
+         do ith = 2, ks
+            do j = jth, ms
+               do i = ith, ms
                   hfm(i,j) = hfm(i,j)+rkb(i-ith+1,j-jth+1,ith,jth) &
-                                     *dx(i-ith+1,j-jth+1) 
-               end do 
-            end do 
-         end do 
-      end do 
+                                     *dx(i-ith+1,j-jth+1)
+               end do
+            end do
+         end do
+      end do
 !     print *, 'hfm'
 !     do 2000 i = 1,ms
 !       print '(I5/(6f12.7))', hfm(i:1:ms)
@@ -137,11 +137,11 @@
 !==================================================================
       subroutine apply_bc(aa,type)
 !==================================================================
-! 
-!   Apply boundary conditions   
-!       
-!   type = n : zero, aa(1,1) = aa(ns,ns) =1 
-!   type = o : zero, aa(1,1) = aa(ns,ns) =0 
+!
+!   Apply boundary conditions
+!
+!   type = n : zero, aa(1,1) = aa(ns,ns) =1
+!   type = o : zero, aa(1,1) = aa(ns,ns) =0
 !   type = e : zero, aa(1,1) = 1.d20, aa(ns,ns) = -1.d20
 !                    (suitable for an eigenvalue problem)
 !------------------------------------------------------------------
@@ -150,7 +150,7 @@
       IMPLICIT NONE
       REAL(KIND=8), DIMENSION(ns,ns), INTENT(inout) :: aa
       CHARACTER(LEN=1), INTENT(in) :: type
-    
+
       If (type .eq. 'n') then
         aa(1,1:ns) =  0.d0
         aa(1:ns,1) =  0.d0
@@ -166,14 +166,14 @@
         aa(1:ns,1) =  0.d0
         aa(ns,1:ns) = 0.d0
         aa(1:ns,ns) = 0.d0
-        aa(1,1) =     0.d0     
+        aa(1,1) =     0.d0
         aa(ns,ns) =   0.d0
       else if (type .eq. 'e') then
         aa(1,1:ns) =  0.d0
         aa(1:ns,1) =  0.d0
         aa(ns,1:ns) = 0.d0
         aa(1:ns,ns) = 0.d0
-        aa(1,1) =    -1.0d20     
+        aa(1,1) =    -1.0d20
         aa(ns,ns) =   1.0d20
         aa(ns-1,1:ns-2) = 0.d0
         aa(1:ns-2,ns-1) = 0.d0
@@ -195,7 +195,7 @@
     CHARACTER(LEN=*), INTENT(in) :: header
     INTEGER(4), INTENT(in) :: n
     REAL(KIND=8), DIMENSION(ns,n), INTENT(in) ::m
- 
+
     ! .. local variables
     INTEGER :: j
 
@@ -221,11 +221,11 @@
     REAL(KIND=8), DIMENSION(ns), INTENT(inout) :: v
 
     REAL(KIND=8), DIMENSION(ns) :: y
-   
+
     call bxv(ks,ns,sb,v,y)
-  
+
     v = v/sqrt(Dot_Product(v,y))
-    
+
     ! Define orbitals to be positive near the nucleus
     if (v(ml) < 0.d0) v = -v
 
@@ -247,7 +247,7 @@
     REAL(KIND=8), DIMENSION(ns) :: v, y
     REAL(KIND=8) :: c
     INTEGER(4) :: i,j
-   
+
     do i=1,nw
        call bxv(ks,ns,sb,p(:,i),y)
        do j = 1,i-1

@@ -2,14 +2,14 @@
 !        ILOW, IHIGH, ISELEC, NIV, MBLOCK, CRITE, CRITC, CRITR, ORTHO, MAXITER&
 !        , WORK, IWRSZ, IWORK, IIWSZ, HIEND, NLOOPS, NMV, IERR)
 !  Stored in  (initialize dby call alloc_diagonalize)
-! block_param:  
+! block_param:
 !    nze, lim, iiwsz, iworksz (parameters)
 !    tm, tp, diag, en, wt, iwork(iiwsz)
 !    hmx -- sparse form of the matrix (nze)
-!    eigvec - (nume+1)*ncfg 
-!    arrays to be allocted by the routine that computes hmx 
+!    eigvec - (nume+1)*ncfg
+!    arrays to be allocted by the routine that computes hmx
 !====================================================================
-    MODULE dvdson_param 
+    MODULE dvdson_param
 !====================================================================
 !
 !   Parameters for the dvdson code
@@ -19,7 +19,7 @@
 !--------------------------------------------------------------------
     USE block_param
     IMPLICIT NONE
-   
+
     REAL(KIND=8) :: crite =1.d-15, &
                     critc =1.d-09, &
                     critr =1.d-09, &
@@ -28,6 +28,6 @@
     INTEGER      :: ilow = -1, ihigh=-1
     INTEGER      :: iupper, iselec, niv, mblock, maxiter, nloops, nmv
     LOGICAL      :: hiend = .false.
-   
+
     REAL(KIND=8), DIMENSION(:), allocatable, target:: hmx, eigvec
-    END MODULE dvdson_param 
+    END MODULE dvdson_param

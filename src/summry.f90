@@ -29,7 +29,7 @@
       USE spline_param
       USE mchf_atomic_state
       USE mchf_inout
-      USE orbitals 
+      USE orbitals
       USE spline_integrals
       USE block_param, ONLY: nblock, term_bl
       USE angular_data, ONLY: intptr, coef => value
@@ -62,36 +62,36 @@
 !
 !  *****  COMPUTE AND PRINT ONE-ELECTRON PARAMETERS
 !
-      DO I = 1, NWF 
+      DO I = 1, NWF
          lp = l(i)+1
          az(i) = p(lp+1,i)*azl(z,h,ks,lp)
-         R1(I) = QUADR(I,I,1) 
+         R1(I) = QUADR(I,I,1)
          HLI(I) = -0.5*bhl(i,i)
-         RM1(I) = QUADR(I,I,-1) 
-         EKINP = HLI(I) + Z*RM1(I) 
+         RM1(I) = QUADR(I,I,-1)
+         EKINP = HLI(I) + Z*RM1(I)
          !Print '(10X,A,I5,3F16.9)', 'i,hli,z*rm1(i),ekinp', i,hli(i),z*rm1(i),ekinp
          !EKINP = -0.5*bvmv(ns,ks,db2,'s',p(:,i),p(:,i))
-         EN = EN + qSUM(I)*EKINP 
-         RH = 3*N(I)*N(I) - L(I)*(L(I)+1) 
-         S(I) = Z - 0.5*RH/R1(I) 
+         EN = EN + qSUM(I)*EKINP
+         RH = 3*N(I)*N(I) - L(I)*(L(I)+1)
+         S(I) = Z - 0.5*RH/R1(I)
          Enl = e(i,i)/qsum(i)
          WRITE (UNIT=log,FMT= 15) EL(I),Enl,HLI(I),EKINP,S(I),AZ(i),maxr(i), maxloc(abs(p(:,i)))
-   15    FORMAT(1X,A3,F15.8,2F15.8,F9.3,F14.6,2I8) 
-      END DO 
+   15    FORMAT(1X,A3,F15.8,2F15.8,F9.3,F14.6,2I8)
+      END DO
 !
 !  *****  Compute Moments
 !
       WRITE (UNIT=log,FMT= 8) 'Delta(r)'
-    8 FORMAT(//2X,'nl',7X,A8,8X,'1/R**3',8X,'1/R',10X,'R',10X,'R**2',10X,'QSUM' ) 
-      DO I = 1, NWF 
-         RM3 = 0 
-         IF (L(I) /= 0) RM3 = QUADR(I,I,-3) 
-         RP2 = QUADR(I,I,2) 
-         RZ = 0.D0 
+    8 FORMAT(//2X,'nl',7X,A8,8X,'1/R**3',8X,'1/R',10X,'R',10X,'R**2',10X,'QSUM' )
+      DO I = 1, NWF
+         RM3 = 0
+         IF (L(I) /= 0) RM3 = QUADR(I,I,-3)
+         RP2 = QUADR(I,I,2)
+         RZ = 0.D0
          IF (L(I) == 0) RZ = AZ(I)**2/(4.*PI)
-         WRITE (UNIT=log,FMT= 16) EL(I), RZ, RM3, RM1(I), R1(I), RP2,qsum(i) 
-   16    FORMAT(1X,A3,F15.6,F15.6,F13.6,F12.8,F12.6,1PD17.8) 
-      END DO 
+         WRITE (UNIT=log,FMT= 16) EL(I), RZ, RM3, RM1(I), R1(I), RP2,qsum(i)
+   16    FORMAT(1X,A3,F15.6,F15.6,F13.6,F12.8,F12.6,1PD17.8)
+      END DO
 
       IBEGIN = INTPTR(5) + 1
       IEND = INTPTR(6)
@@ -102,15 +102,15 @@
           en = en + cont*coef(ip)
         end if
       end do
-      
-      EPOTL = ETotal - EN 
-      RATIO = EPOTL/EN 
-      WRITE (UNIT=err,FMT= 26) ETotal, EN,  EPOTL,  RATIO 
-      WRITE (UNIT=log,FMT= 26) ETotal, EN,  EPOTL,  RATIO 
+
+      EPOTL = ETotal - EN
+      RATIO = EPOTL/EN
+      WRITE (UNIT=err,FMT= 26) ETotal, EN,  EPOTL,  RATIO
+      WRITE (UNIT=log,FMT= 26) ETotal, EN,  EPOTL,  RATIO
    26 FORMAT(//7X,'TOTAL ENERGY (a.u.)',5X,F25.15 / &
           T22,'Kinetic   ',F25.15,/,10X, &
           T22,'Potential ',F25.15,/,10X, &
-          T22,'Ratio     ',F25.15) 
-      RETURN  
-      END SUBROUTINE SUMMRY 
+          T22,'Ratio     ',F25.15)
+      RETURN
+      END SUBROUTINE SUMMRY
 !======================================================================

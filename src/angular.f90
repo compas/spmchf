@@ -5,9 +5,9 @@
 !--------------------------------------------------------------------
       USE memory_use
       USE block_param
-     
+
       IMPLICIT NONE
-      
+
       INTEGER :: idim, ncodim  ! parameters read from cfg.h
       INTEGER, PARAMETER    :: maxclst = 250000000  ! maximum size
       INTEGER, DIMENSION(6)                      :: intptr
@@ -20,7 +20,7 @@
 !----------------------------------------------------------------------
 !     A L C S T S
 !----------------------------------------------------------------------
-!    This routine allocates arrays associated with states.  For the 
+!    This routine allocates arrays associated with states.  For the
 !    yint.lst arrays, memory needs to be allcoated for all blocks,
 !    but c.lst arrays are read in groups of size lsdim.
 
@@ -34,12 +34,12 @@
 
       nze_tot = sum(nze_bl(1:nblock))
       ncfg_tot = sum(ncfg_bl(1:nblock))
-      nnn = sum(cf_tot(1:nblock));      
-      !  nze_max_bl is maximum nze of a block 
+      nnn = sum(cf_tot(1:nblock));
+      !  nze_max_bl is maximum nze of a block
       nze_max_bl = maxval(nze_bl(1:nblock))
-      !  nze_max_col is maximum nze of a cloumn of the matrix 
+      !  nze_max_col is maximum nze of a cloumn of the matrix
       nze_max_col = maxval(nze_max(1:nblock))
-      
+
       ! allocate for all in memory
       allocate(kval(idim), value(idim), lused(idim))
       allocate(ico(nze_tot), ih(nze_tot), STAT=ierr)

@@ -18,7 +18,7 @@
       CHARACTER(LEN=1) :: type
 
       INTEGER :: i,j,imin,imax, m1, m2
-      
+
       ! .. determine range of orbital
       !Print '(A/(10F8.4))', 'density: p1:', p1
       do i = ns,ns/2,-1
@@ -31,9 +31,9 @@
       end do
       m2 = i
       ms = min(m1,m2)
-      
+
       if(type.eq.'s') then                    !     o***
-      
+
         d(1:ns,1:ks) = 0.d0
                                               !     o***
         do i =1,ms                            !     o***
@@ -62,7 +62,7 @@
       else
 
         d(1:ns,1:ns) = 0.d0
-        
+
         do i = 1,ms
           do j = 1,ms
             d(i,j) =  p1(i)*p2(j)

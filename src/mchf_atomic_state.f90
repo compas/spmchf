@@ -1,5 +1,5 @@
 !=======================================================================
-  MODULE mchf_atomic_state 
+  MODULE mchf_atomic_state
 !=======================================================================
 !   This module defines the parameters for the problem to be solved
 !----------------------------------------------------------------------
@@ -17,9 +17,9 @@
     CHARACTER(LEN=2) :: atom
     CHARACTER(LEN=3) :: term
     CHARACTER(LEN=32) :: configuration
- 
 
-    ! orbital variables that depend on nwf 
+
+    ! orbital variables that depend on nwf
     INTEGER :: nclosd, nwf, nit1, nit2
     CHARACTER(LEN=3), DIMENSION(:), ALLOCATABLE :: el
     INTEGER, DIMENSION(:), ALLOCATABLE :: n, l, maxr, iord, in
@@ -29,14 +29,14 @@
     REAL(KIND=8), DIMENSION(:,:), ALLOCATABLE :: e, rdg
 
  END module mchf_atomic_state
-  
+
     !===================================================================
       SUBROUTINE allocate_atomic_state
     !===================================================================
     !   This program allocates arrays associated with the orbitals (nwf)
     !-------------------------------------------------------------------
        USE mchf_atomic_state
-        
+
         IMPLICIT NONE
 	ALLOCATE( el(nwf) )
 	ALLOCATE( n(nwf), l(nwf), maxr(nwf), iord(nwf), in(nwf), &
@@ -44,6 +44,6 @@
 	ALLOCATE( dpm(nwf), s(nwf), qsum(nwf), az(nwf) )
         ALLOCATE( e(nwf,nwf), rdg(nwf,nwf) )
         e=0.d0;; rdg=0.d0
-     
+
       END SUBROUTINE allocate_atomic_state
 

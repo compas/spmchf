@@ -4,15 +4,15 @@
 !
 !   Parameters defining the problem   (not yet implemented)
 !     Tests for convergence:
-!     . CL_atom      : name of the case. 
+!     . CL_atom      : name of the case.
 !         input files: cfg.inp and optionally bsw.inp
 !     . CL_Z         : atomic number
 !        output files: name.ZZ.bsw, name.ZZ.Term.l, name.ZZ.log, name.dat
-!        
+!
 !   Parameters defining the iteration  (first level)
 !     . CL_scf_tol :  maximum relative change in the energy defining
 !                     convergence
-!     . CL_orb_tol :  maximum change in an orbital relative to its 
+!     . CL_orb_tol :  maximum change in an orbital relative to its
 !                     maximum value
 !     . CL_cfg_tol :  maximum change in mixing coefficient
 !     . CL_end_tol :  values in the tail all less than this value in
@@ -30,7 +30,7 @@
 !
 !--------------------------------------------------------------------
     IMPLICIT NONE
-   
+
     CHARACTER(LEN=2) :: CL_atom='-1'
 
     CHARACTER(LEN=4) :: CL_varied1='-1', CL_varied2='-1'

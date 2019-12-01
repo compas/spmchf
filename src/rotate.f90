@@ -4,19 +4,19 @@
 !   Determine the rotation parameter for a  a stationary solution for
 !   the (j,i) orbitals, i <= j
 !   Rules derived from transformation of densities
-!  
+!
 !  Let P*i = (Pi - ePj)/(1+e^2)2
 !      P*j = (Pj + ePi)/(1+e^2)2
-!  
-!   We compute three values:  
+!
+!   We compute three values:
 !   F(1) : sum of contributions to energy from terms that depend on i,j
 !          with e = 0         (F0)
 !   F(2) : sum with e=  +eps  (F+)
 !   F(3) : sum with e = -eps  (F-)
 !   where eps is a numerically selected value
 !   From F(e) = F0  +e F'(0) + e^2 F"(0)/2  we get
-!   F"(0) = [F+ - 2F0 - F-]/e^2  
-!   F'(0) = [F+ - F-]/(2e) 
+!   F"(0) = [F+ - 2F0 - F-]/e^2
+!   F'(0) = [F+ - F-]/(2e)
 !----------------------------------------------------------------------
 !
     Use spline_param
@@ -35,7 +35,7 @@
     REAL (KIND=8), DIMENSION(ns) :: Pi, Pj, y
     !REAL (KIND=8), DIMENSION(ns,ks) :: d, dsum, hd
     !REAL (KIND=8), DIMENSION(ns,ns) :: dx, hfm, dxsum
-    REAL (KIND=8):: eps, g, dg, ec_save, c 
+    REAL (KIND=8):: eps, g, dg, ec_save, c
     LOGICAL :: found
     REAL (KIND=8), DIMENSION(3) :: F
 
@@ -44,10 +44,10 @@
 
     print *, '--------------------- Rotate-------------------', i,j
 
-   
+
     Pi = p(:, i); Pj = p(:, j)
     ec_save = ec; ec = 0.0d0
-    
+
     eps = abs(rdg(i,j))
     if (eps == 0.d0) eps = 0.08
     Do ip = 1,3
@@ -59,7 +59,7 @@
         P(:,j) = (Pj -eps*Pj)/sqrt(1.+eps*eps)
       end if
 
-      F(ip) = 0; 
+      F(ip) = 0;
 
       if (i <= nclosd) then
 
@@ -94,7 +94,7 @@
      end do
 
       end if
-     
+
       IBEGIN =  1
       IEND = INTPTR(2)
       DO jp = IBEGIN,IEND
@@ -120,7 +120,7 @@
           end if
         end if
       end do
- ! 
+ !
       IBEGIN = IEND + 1
       IEND = INTPTR(6)
       DO jp = IBEGIN,IEND
@@ -147,7 +147,7 @@
     Print *, '      --------------------------------------------'
 
     rdg(i,j) = eps
-       
+
     p(:,i) = (Pi - eps*Pj)/sqrt(1+eps*eps)
     p(:,j) = (Pj + eps*Pi)/sqrt(1+eps*eps)
 
@@ -159,7 +159,7 @@
     ! restore ec
     ec = ec_save
     end SUBROUTINE rotate
-        
-            
-    
-  
+
+
+
+

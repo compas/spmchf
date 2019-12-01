@@ -1,7 +1,7 @@
 !=====================================================================
       subroutine update
 !=====================================================================
-!     Compute the radial integrals 
+!     Compute the radial integrals
 !------------------------------------------------------------------
       !USE spline_param, ONLY: h,hmax,rmax,ns,ks,ml
       !USE spline_galerkin, ONLY: sb,bb
@@ -12,7 +12,7 @@
       USE angular_data
 
       IMPLICIT NONE
-      INTEGER :: len, ibegin, iend, i, k1, k2, kv, iel1,iel2,iel3,iel4  
+      INTEGER :: len, ibegin, iend, i, k1, k2, kv, iel1,iel2,iel3,iel4
       REAL(KIND=8), EXTERNAL :: hlc, rk,fk, gk, quadr
       INTEGER, DIMENSION(4) :: ir
       INTEGER :: ii,jj
@@ -60,7 +60,7 @@
            VALUE(I) = RK(IEL1,IEL2,IEL3,IEL4,KV)
           end if
         End do
-! 
+!
       ! HLc
         IBEGIN = IEND + 1
         IEND = INTPTR(6)
@@ -82,7 +82,7 @@
         End do
         IF (CHANGE .OR. (EC== 0.D0 .and. nclosd >0 )) CALL ECORE
 !
-       
+
         END subroutine update
 
 

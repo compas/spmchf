@@ -2,7 +2,7 @@
        SUBROUTINE scf_nr(i,north, jorth, hfm, bb, hx, rhs, md, v, eii)
 !==================================================================
 !    Improve the estimate v by the Newton_Raphson method
-!    subject to orthogonality where eij and eji are computed by 
+!    subject to orthogonality where eij and eji are computed by
 !    the lagrange routine to ensure the same values.
 !------------------------------------------------------------------
         USE angular_data, coef=>value
@@ -12,8 +12,8 @@
         USe mchf_atomic_state
         USE mchf_inout
         Use orbitals
-        IMPLICIT NONE      
-        
+        IMPLICIT NONE
+
         INTEGER, INTENT(in) :: i, north, md
         INTEGER, DIMENSION(:), INTENT(in) :: jorth
         REAL(KIND=8), DIMENSION(ns,ns), INTENT(in) :: hfm,  bb, hx
@@ -28,15 +28,15 @@
 
         REAL(KIND=8), DIMENSION(ns) :: x, y
         REAL(KIND=8), DIMENSION(ns,ns) :: dx, dxsum
-        REAL(KIND=8) :: eij, eeii,  cc 
-        
+        REAL(KIND=8) :: eij, eeii,  cc
+
         INTEGER :: mm, k, info, j, jp, ibegin, iend, kv, i1,i2,i3, i4
-        
+
         !  .. use the same sign conventions as in scall_nr
 
 
         aa = 0.d0
-       
+
         rhs(1) = 0.d0; rhs(ns-1:ns) = 0.d0
         x = matmul(hfm,v) + rhs;  x(1) = 0.d0; x(ns-1:ns) = 0.d0
 
@@ -44,7 +44,7 @@
         call bxv(ks,ns,sb,v,y);  y(1) = 0.d0; y(ns-1:ns) = 0.d0
         res(1:ns) = x-eeii*y
 
-        ! compute the residuals     
+        ! compute the residuals
         aa(1:ns,1:ns) = (hfm -eeii*bb)
         call apply_bc(aa(1:ns,1:ns),'n')
 
@@ -62,7 +62,7 @@
 
           eij = dot_product(p(:,j),x(:))
           ! check Lagrange multipliers
-   
+
           eij = e(i,j)
           call bxv(ks,ns,sb,p(:,j),y)
           y(1) = 0.d0; y(ns-1:ns) = 0.d0
@@ -76,7 +76,7 @@
             Print *, "mm /= md"
             STOP
         end if
-   
+
         ! Add Haa contributions
          call apply_bc(hx,'n')
          aa(1:ns,1:ns) = aa(1:ns,1:ns) + hx
@@ -93,7 +93,7 @@
            WRITE(UNIT=err,'(A)') ' Error in solve routine : DGETRS in scf_nr'
            STOP
          End if
-         
+
          v = v-res(1:ns)
          call normalize(v)
          eii = (eeii -res(ns+1))

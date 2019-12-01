@@ -16,7 +16,7 @@
     INTEGER(4) :: me     !   number of intervals in the exponential region
 
     REAL(8) :: h         !   initial step in the knot sequence for z*r
-    REAL(8) :: hmax      !   maximum step, t(ns+1) - t(ns) 
+    REAL(8) :: hmax      !   maximum step, t(ns+1) - t(ns)
     REAL(8) :: rmax      !   border radius, t(ns+1)
 
     END MODULE spline_param

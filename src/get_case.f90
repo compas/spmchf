@@ -9,7 +9,7 @@
       Use av_energy
       Use mchf_atomic_state
       Use orbitals
-      
+
       LOGICAL :: done
       INTEGER :: iselec
 
@@ -18,7 +18,7 @@
 9     FORMAT(///////22X,'===========================================',&
                    /22X,'       S P L I N E  M C H F  : 2010',&
                    /22X,'==========================================='/)
- 
+
       CALL init
 
       ! .. get the atomic state problem

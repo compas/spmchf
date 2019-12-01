@@ -4,21 +4,21 @@
 !
 !   Defines moments for Rk-integrals in the B-spline cells
 !
-!   Calling sequence:          rk_moments             
-!                              ----------             
-!                               /    \\           
-!                           moments rk_pdiag      
-!                                     ||          
-!                                   rk_triang     
-!                                    /   \        
-!                                 gauss  vbsplvb  
-! 
+!   Calling sequence:          rk_moments
+!                              ----------
+!                               /    \\
+!                           moments rk_pdiag
+!                                     ||
+!                                   rk_triang
+!                                    /   \
+!                                 gauss  vbsplvb
+!
 !----------------------------------------------------------------------
 !
 !   on entry    k  -  multipole index
 !   --------
-!       
-!   on exit     rkd1,rkd2,rkd - off-diagonal and diagonal moments 
+!
+!   on exit     rkd1,rkd2,rkd - off-diagonal and diagonal moments
 !   -------                     (in module spline_moments)
 !
 !----------------------------------------------------------------------
@@ -44,7 +44,7 @@
 
     ! .. add the relativistic correction
 
-    if(rel) Call rk_rel      
+    if(rel) Call rk_rel
 
     mtype='rk '
     kmk=k
@@ -105,16 +105,16 @@
     SUBROUTINE rk_triang(iv)
 !======================================================================
 !
-!   Returns the two-dimensional array of B-spline integrals 
+!   Returns the two-dimensional array of B-spline integrals
 !               <B_i B_j|r^k/r^(k+1)|B_i' B_j'>
-!   over the given triangle diagonal cell 
+!   over the given triangle diagonal cell
 !
 !   Calls:   gauss, vbsplvd
 !
 !   On entry   iv  -  index of the diagonal cell
 !   --------
 !
-!   On exit    rkd(.,.,iv) - arrays of Rk B-spline integrals for given 
+!   On exit    rkd(.,.,iv) - arrays of Rk B-spline integrals for given
 !   --------                 interval iv in the reduced-dimension mode
 !                            (in module spline_moments)
 !----------------------------------------------------------------------
@@ -175,10 +175,10 @@
         INT(j,jp,m)= SUM(gw(:)*bspTmp(:,jp))
        END DO
       END DO
-    
+
     END DO	 !  over m
 
-! .. second integration 
+! .. second integration
 
     IF(k/=0) THEN
       gx(:) = grw(iv,:)*grm(iv,:)**(k+1)
@@ -200,7 +200,7 @@
       END DO
      END DO
     END DO
-    
+
     ik = ks*(ks+1)/2
     rkd(1:ik,1:ik,iv) = a + TRANSPOSE(a)
 
@@ -208,7 +208,7 @@
 
 
 !======================================================================
-    SUBROUTINE rk_rel 
+    SUBROUTINE rk_rel
 !======================================================================
 !
 !   relativistic corrections to the Rk integrals
@@ -221,7 +221,7 @@
 
     REAl(8) :: C
     REAl(8), DIMENSION(ks) :: a,b
-    Integer(4) :: iv, i,j, ip,jp, ii,jj 
+    Integer(4) :: iv, i,j, ip,jp, ii,jj
 
      C = fine*(k+k+1)
      Do iv = 1,nv
@@ -243,7 +243,7 @@
      END DO
      END DO
 
-    End SUBROUTINE rk_rel 
+    End SUBROUTINE rk_rel
 
 
 

@@ -1,5 +1,5 @@
 !=====================================================================
-      subroutine scf_matrix(i,hfm, hx, rhs) 
+      subroutine scf_matrix(i,hfm, hx, rhs)
 !=====================================================================
 !
 !     1) Set up the hf_matrix for orbital i.  Banded matrices will be
@@ -43,7 +43,7 @@
       USE spline_hl
       USE av_energy
       USE angular_data, coef => value
-      
+
       IMPLICIT NONE
       REAL(KIND=8), DIMENSION(ns,ns),INTENT(out) :: hfm, hx
       REAL(KIND=8), DIMENSION(ns),INTENT(out)    :: rhs
@@ -94,27 +94,27 @@
 
 !
 !
-!     call from_I_integrals    
-!   
-!     call from_F_integrals   
+!     call from_I_integrals
 !
-!     call from_G_integrals  
+!     call from_F_integrals
 !
-!     call from_R_integrals 
-!   
+!     call from_G_integrals
+!
+!     call from_R_integrals
+!
 !     Call add_band_to_full(hd,hfm)
 
    CONTAINS
 !=====================================================================
       subroutine Icore(i)
 !=====================================================================
-!     contributions to hfm for orbital i in the closed shells 
+!     contributions to hfm for orbital i in the closed shells
 !---------------------------------------------------------------------
       IMPLICIT NONE
-      INTEGER, INTENT(IN) :: i      
+      INTEGER, INTENT(IN) :: i
 
       hd =  hd -qsum(i)*hl/2
-      
+
       ! direct  (k=0)
       dsum = 0.d0
       do j = 1, nclosd
@@ -225,7 +225,7 @@
             call Irhs(i)
          end if
        end do
-     
+
        end subroutine from_I_integrals
 !=====================================================================
       subroutine Icoreval(i)
@@ -234,8 +234,8 @@
 !     related to outer I-integrals (i1,i2)  (i < nclosd)
 !---------------------------------------------------------------------
       IMPLICIT NONE
-      
-      INTEGER, INTENT(IN) :: i      
+
+      INTEGER, INTENT(IN) :: i
 
       ! direct k = 0   Rk(.,i1;.,i2,0)
       if (nclosd > 0) then
@@ -261,7 +261,7 @@
      IMPLICIT NONE
      INTEGER, INTENT(IN) :: i
      REAL(KIND=8)        :: fk, gk
- 
+
      hd = hd + coef(jp)*hl
      call bxv(ks,ns,hd, p(:,i),y)
 
@@ -288,19 +288,19 @@
         end do
         if (found) call add_rkm_x(k, dxsum, hfm)
      end do
-  
+
      end subroutine Ivalcore
 !=====================================================================
      subroutine Irhs(i)
 !=====================================================================
 !     contributions to rhs for orbital i outside closed shells from the
-!     core related to outer I-integrals (ii,i2) where i1 /= i2 .and. 
+!     core related to outer I-integrals (ii,i2) where i1 /= i2 .and.
 !     i > nclosd
 !---------------------------------------------------------------------
      IMPLICIT NONE
      INTEGER, INTENT(IN) :: i
      REAL(KIND=8), DIMENSION(ns) :: v
-     
+
      if (i1 /= i) then
         i3 = i1; i1 = i2; i2 = i3   ! interchange
      end if
@@ -309,7 +309,7 @@
 
      c = -2*c
      dsum = 0.d0
-     do j = 1, nclosd 
+     do j = 1, nclosd
         ! direct k = 0   Rk(.,j;.,j,0)
         call density(ns, ks, d, p(:,j), p(:,j), 's', ms)
         dsum = dsum +c*qsum(j)*d
@@ -320,8 +320,8 @@
      rhs = rhs + v
 
      ! exchange        Rk(.,.;j,j)
-     do k = 0, kmax 
-        dxsum = 0.d0 
+     do k = 0, kmax
+        dxsum = 0.d0
         foundx = .false.
         do j = 1,nclosd
           if ( mod( abs(l(i)-l(j))-k,2) /= 0) cycle
@@ -337,11 +337,11 @@
 !=====================================================================
       subroutine from_F_integrals
 !=====================================================================
-!     contributions to hfm F-integrals that are stored in order of 
+!     contributions to hfm F-integrals that are stored in order of
 !     increasing k
 !---------------------------------------------------------------------
       IMPLICIT NONE
-  
+
        k = 0; jbegin=1; found = .false.; dsum = 0.d0
        do jp = jbegin,intptr(1)
          if (.not. lused(jp)) cycle
@@ -382,7 +382,7 @@
       IMPLICIT NONE
       INTEGER :: im
 
-     ! Add exchange contribution 
+     ! Add exchange contribution
       dxsum = 0.d0
       k = 0; found = .false.
       jbegin=intptr(1)+1
@@ -425,7 +425,7 @@
       INTEGER :: ie1, ie2
 
      ! Direct contributions
-     k =0 
+     k =0
      dxsum = 0.d0; dsum  = 0.d0
      found = .false. ; foundx = .false.
      jbegin=intptr(4)+1
@@ -455,7 +455,7 @@
           ie2 = 1
           if (i2 /= i) then
              itmp = i2; i2=i4; i4 = itmp
-           end if  
+           end if
            if ((i2 ==i) .and. (i4 == i) ) ie2 = 2
         end if
        if (ie1+ie2 == 0) cycle
@@ -467,11 +467,11 @@
        end if
 
        select case (ie1+ie2)                  ! Rk(i,i2;i3,i4)
-         case (1)  
+         case (1)
            call density(ns,ks,d,p(:,i2),p(:,i4),'s',ms)
            ihd = 0
            call add_rkm_d(k, d, ihd)
-           call bxv(ks,ns,ihd,p(:,i3),v)  
+           call bxv(ks,ns,ihd,p(:,i3),v)
            rhs = rhs + (c/2)*v
 
           case (2)             ! Rk(i,i2;i.i4) or Rk(i,i;i3,i4)
@@ -487,7 +487,7 @@
                print *, 'R_int', dot_product(v,p(:,i))
             end if
 
-          case (3)             ! Rk(i,i;i,i4) 
+          case (3)             ! Rk(i,i;i,i4)
             call density(ns,ks,d,p(:,i2),p(:,i4),'s',ms)
             call add_rkm_d(kv, c*d, hd)
 
@@ -513,5 +513,5 @@
      end do
 
      end subroutine from_R_integrals
-            
+
    END SUBROUTINE scf_matrix

@@ -1,8 +1,8 @@
 !=======================================================================
-  SUBROUTINE vhwf(n,l,z,nr,r,vh,ierr)  
+  SUBROUTINE vhwf(n,l,z,nr,r,vh,ierr)
 !=======================================================================
 !
-!   This program returns the vector of values, vh(i), of a normalized 
+!   This program returns the vector of values, vh(i), of a normalized
 !   hydrogenic function with nuclear charge z and quantum numbers (n,l)
 !   at values of the radius, r(i),  i=1,nr.
 !
@@ -42,63 +42,63 @@
     REAL(KIND=8), DIMENSION(nr) :: w, p
 
     CALL hnorm       ! .. gets the normalization factor
-    k = n-l-1  
- 
+    k = n-l-1
+
     ! .. store the argument of the exponential factor
- 
-    w = -2.D0*z*r/n  
- 
+
+    w = -2.D0*z*r/n
+
     ! .. to avoid underlow, determine point at which function will be zero
     ! .. Note that exp(-150) = 0.7175 10**-65
- 
-    nm = nr  
+
+    nm = nr
     do
-      if (w(nm) < -150.D0 .AND. nm /= -1) then  
-        vh(nm) = 0.D0  
-        nm = nm-1  
+      if (w(nm) < -150.D0 .AND. nm /= -1) then
+        vh(nm) = 0.D0
+        nm = nm-1
       else
         EXIT
-      end if  
+      end if
     end do
- 
+
     ! .. Initialize the recurrence relation for each value of r(i)
- 
-    p(1:nm) = 1.D0  
- 
-    a = 1.D0  
-    b = k  
-    c = n+l  
-    ierr = 0  
- 
+
+    p(1:nm) = 1.D0
+
+    a = 1.D0
+    b = k
+    c = n+l
+    ierr = 0
+
     SELECT CASE (k)
- 
+
     CASE(:-1)      ! .. all values below 0
-      ierr = 1  
-    RETURN  
+      ierr = 1
+    RETURN
 
     CASE (1:)      ! .. all values above 0
- 
+
       ! .. Apply the recurrence relation when k is positive
- 
-      do I = 1,k  
-        p(1:nm) = 1.D0+a/b*p(1:nm)/c*w(1:nm)  
-        a = a+1.D0  
-        b = b-1.D0  
-        c = c-1.D0  
+
+      do I = 1,k
+        p(1:nm) = 1.D0+a/b*p(1:nm)/c*w(1:nm)
+        a = a+1.D0
+        b = b-1.D0
+        c = c-1.D0
       end do
     END SELECT
- 
+
     ! .. Multiply the factor by the exponential
- 
-    vh(1:nm) = factor*p(1:nm)*EXP(w(1:nm)/2.D0)*(-w(1:nm))**(l+1)  
- 
-    CONTAINS  
+
+    vh(1:nm) = factor*p(1:nm)*EXP(w(1:nm)/2.D0)*(-w(1:nm))**(l+1)
+
+    CONTAINS
 
     !====================================================================
       SUBROUTINE hnorm
     !====================================================================
     !
-    !   returns the value of the normalization constant for an 
+    !   returns the value of the normalization constant for an
     !   hydrogenic function with nuclear charge z, and orbital
     !   quantum numbers (n,l)
     !

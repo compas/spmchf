@@ -17,7 +17,7 @@
       USE mchf_inout
       USE orbitals
       USE mchf_param
-      
+
       IMPLICIT NONE
 
 !
@@ -28,13 +28,13 @@
       CHARACTER(LEN=6), DIMENSION(nwf) :: ATM, TRM
 
       in = 0
- 
+
       ! .. Read bwfn.inp for fixed orbitals or initial estimates
       call read_bsw
 
-      ! Assume 
+      ! Assume
       !  .. fixed orbitals are from 1 to nwf-nit (at the beginning)
-      !  .. have the same spline parameters 
+      !  .. have the same spline parameters
 
       ! Determine the overlap matrix
       ! .. generate the b matrix (could be part of a  module)
@@ -74,7 +74,7 @@
       end do
       call orthonormalize(nwf)
 ! We now have an orthonormal set of initial estimates
-      
+
       ! Do i = 1,nwf
       !   Write(50,'(10X,A3,F10.5,I4, 2F10.5)') el(i), Z, maxr(i), e(i,i), dpm(i)
       !   Write(50,'(8F13.8)') p(:,i)
@@ -84,7 +84,7 @@
     !==================================================================
         SUBROUTINE screened_hydrogenic(i,zz)
     !==================================================================
-    !   Compute the screened hydrogenic function for orbital i    
+    !   Compute the screened hydrogenic function for orbital i
     !   that satisfies orthogonality constraints.
     !------------------------------------------------------------------
           INTEGER, INTENT(in) :: i

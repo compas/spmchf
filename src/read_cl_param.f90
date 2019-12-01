@@ -38,7 +38,7 @@
         case ('ks'     ); Read(value,*) CL_ks
         case ('scf_tol'); Read(value,*) CL_scf_tol
         case ('orb_tol'); Read(value,*) CL_orb_tol
-        case ('end_tol'); Read(value,*) CL_end_tol 
+        case ('end_tol'); Read(value,*) CL_end_tol
         case ('acc_max'); Read(value,*) CL_acc_max
         case ('max_it1'); Read(value,*) CL_max_it1
         case ('max_it2'); Read(value,*) CL_max_it2
@@ -48,4 +48,4 @@
     END DO
 
   END subroutine read_CL_param
-    
+

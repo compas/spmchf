@@ -10,38 +10,38 @@
 !   --------
 !      k      the power of moments
 !      sym    's' or 'n' - symmetrical or non-symetrical case
-!      div    'b' or 'd' - B_j or B'_j 
+!      div    'b' or 'd' - B_j or B'_j
 !
 !   on exit
 !   -------
-!                                              
+!
 !      rkm    array of moments for every interval 'iv'
 !
 !---------------------------------------------------------------------
-  
+
       USE spline_param
-  
+
       IMPLICIT NONE
       INTEGER(4), INTENT(in) :: k
       REAL(8), DIMENSION(ks*ks,nv), INTENT(out) :: rkm
       CHARACTER(1), INTENT(in) :: sym, dir
-  
+
       ! .. local variables
-  
+
       INTEGER :: iv, jk
       REAL(KIND=8) :: hp
       REAL(KIND=8), DIMENSION(ks*ks) :: rv
-  
+
       jk = ks*(ks+1)/2
       if(sym.eq.'n') jk=ks*ks
-  
+
       if(me.eq.0) then     ! .. there is no exponential grid
-  
+
        Do iv = 1,nv
         Call moment(iv,k,rv,sym,dir)
         rkm(1:jk,iv) = rv(1:jk)
-       End do 
-  
+       End do
+
       else                 ! .. case of exponential grid
 
        ! .. the first non-exponential region
@@ -84,26 +84,26 @@
 !   --------
 !      k      the power of moments
 !      sym    's' or 'n' - symmetrical or non-symetrical case
-!      div    'b' or 'd' - B_j or B'_j 
+!      div    'b' or 'd' - B_j or B'_j
 !      iv     index of interval
 !
 !   on exit
 !   -------
-!                                              
+!
 !      rv     array of moments for given interval 'iv'
 !
 !---------------------------------------------------------------------
 
       USE spline_param
       USE spline_grid
-      
+
       IMPLICIT NONE
       INTEGER(4), INTENT(in) :: k,iv
       REAL(8), DIMENSION(ks*ks), INTENT(out) :: rv
       Character(1), INTENT(in) :: sym, dir
-      
+
       ! .. local variables
-      
+
       INTEGER(4) :: i, j, ii, jj
       REAL(8), DIMENSION(ks) :: gw
       REAL(8), DIMENSION(ks,ks) :: bi,bj
@@ -116,7 +116,7 @@
       Do j = 1,ks
        if(dir.eq.'b') then
         bj(:,j) = bsp(iv,:,j)*gw(:)
-       else           
+       else
         bj(:,j) = bsq(iv,:,j)*gw(:)
        end if
       End do

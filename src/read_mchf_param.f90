@@ -24,14 +24,14 @@
     If (line1(1:4) /= 'MCHF') &
        Stop 'First line of mchf_param does not start with MCHF'
     Read(iup,'(A)')  line2
-    
-    Do 
+
+    Do
       call get_next
       if (ios /= 0) EXIT
       select case (trim(var))
        case ('scf_tol'); Read(value,*) scf_tol
        case ('orb_tol'); Read(value,*) orb_tol
-       case ('end_tol'); Read(value,*) end_tol 
+       case ('end_tol'); Read(value,*) end_tol
        case ('acc_max'); Read(value,*) acc_max
        case ('varied1'); Read(value,*) varied1
        case ('varied2'); Read(value,*) varied2
@@ -58,18 +58,18 @@
 
    Read(iup,'(A)',IOSTAT=ios) line
    IF (ios /= 0) Return
-   i = INDEX(line,'=')  
+   i = INDEX(line,'=')
    var =trim(adjustl( line(1:i-1)))
    value = adjustl(line(i+1:))
-   
+
   END subroutine get_next
 
   END subroutine read_mchf_param
-    
+
 !====================================================================
     SUBROUTINE write_mchf_param
 !====================================================================
-!   Write mchf_param 
+!   Write mchf_param
 !--------------------------------------------------------------------
     USE spline_param
     USE mchf_inout
@@ -101,7 +101,7 @@
    !If (varied == 'list') &
    !  WRITE(UNIT=iup,FMT='(A,A)')   'list    = ', trim(vstring)
     WRITE(UNIT=iup,FMT='(A,1PD16.9)') 'etl_sum = ', etl_sum
-    
-    
-    END subroutine write_mchf_param 
+
+
+    END subroutine write_mchf_param
 !====================================================================

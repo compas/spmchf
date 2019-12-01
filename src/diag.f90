@@ -11,14 +11,14 @@
       USE mchf_inout
       USE memory_use
       USE mchf_param
-      USE block_param 
+      USE block_param
       USE dvdson_param
 
       IMPLICIT NONE
       REAL(KIND=8), INTENT(OUT) :: sum_energy
       INTEGER :: I, J, iblock, ibe,ibw, ibv, nz, nj, ijp, ivs, ies,   &
                  ncoef, neiv, nijcurr, max_col, jjh, icc, n_count_tmp
-      INTEGER, DIMENSION(1) ::  jloc 
+      INTEGER, DIMENSION(1) ::  jloc
       REAL(KIND=8) :: etl, shift
 !------------------------------------------------------------------------
 !     Reminder:  eigvec is for the local block (all eigenvectors 1..nume)
@@ -26,11 +26,11 @@
 !                   only the selected eigenvectors and eigenvalues
 !                niv counts the selected eigenvectors globally
 !------------------------------------------------------------------------
-     
-      idisk = 0; 
+
+      idisk = 0;
       etl = 0; sum_energy = 0; nz = 0; nj = 0
-      ijp = 1; ivs = 1; ies = 1; 
-      ibe = 0; ncoef = 0; 
+      ijp = 1; ivs = 1; ies = 1;
+      ibe = 0; ncoef = 0;
 
       ibw = 0; ibe=0
       do iblock = 1,nblock
@@ -40,7 +40,7 @@
         neiv = nume(iblock)
         allocate(hmx(nze), eigvec((ncfg+1)*neiv))
         nijcurr = 1
-        max_col = 1; 
+        max_col = 1;
         jjh = 1
         diag_ih_memory  = .true.
         diag_ico_memory = .true.
@@ -71,7 +71,7 @@
           ibw = ibw +ncfg
           ibe = ibe+1
         else
-         
+
          ! full matrix
            call iniest2(2000, ncfg, neiv)
 !        .. save eigenvectors and eigenvalues
@@ -84,30 +84,30 @@
                  eigvec(ibv+1:ibv+ncfg) = -eigvec(ibv+1:ibv+ncfg)
                end if
                wt(ibw+1:ibw+ncfg) = eigvec(ibv+1:ibv+ncfg)
-               etl =  eigvec(ncfg*nume(iblock)+icc) + ec 
+               etl =  eigvec(ncfg*nume(iblock)+icc) + ec
                ibe = ibe + 1
 	       en(ibe) = etl
                sum_energy = sum_energy +etl*eigst_weight(icc,iblock)
                ibw = ibw + ncfg
              end if
              ibv = ibv+ncfg
-           end do 
+           end do
         end if
       end do
       deallocate(hmx, eigvec)
-        
+
    CONTAINS
 !======================================================================
      subroutine compute_hmx
 !======================================================================
       IMPLICIT NONE
       INTEGER :: n_cf, nze, ii
- 
+
       n_cf = cf_tot(iblock)
       nze  = nze_bl(iblock)
       hmx(1:nze) = 0.0
-      max_col = 1; 
-      
+      max_col = 1;
+
       do ii = 1, n_cf;
 !       .. test for next non-zero matrix element
           n_count_tmp = ncoef+ii

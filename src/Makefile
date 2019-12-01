@@ -1,7 +1,7 @@
 
 #  Written by C. Froese Fischer and Y. Qiu
 #  Modified and extended by O. Zatsarinny
-#  
+#
 #  Modified by C. Froese Fischer
 #  January, 2006
 
@@ -24,7 +24,7 @@ My_LIBS= spline_param.o spline_grid.o spline_galerkin.o spline_hl.o \
          mrk_cell.o rk.o density.o \
          yval.o minty.o bhwf.o rk_moments.o vinty.o moments.o \
          routines.o bhl.o bvmv.o quadr.o  el_nl.o bvalu2.o \
-         lapack_interface.o  plot_bsw.o 
+         lapack_interface.o  plot_bsw.o
 
 My_APPS= spmchf.o read_mchf_param.o get_case.o get_atom.o intgrl.o \
          get_spline_param.o define_spline.o mkgrid.o get_estimates.o \
@@ -37,7 +37,7 @@ My_APPS= spmchf.o read_mchf_param.o get_case.o get_atom.o intgrl.o \
 spmchf: $(My_LIBS) $(My_APPS) $(dvdson)
 	$(FC) -o spmchf $(FC_LD)  $(My_LIBS) $(My_APPS) $(dvdson) \
         -L $(LAPACK_DIR) -llapack -lblas
-	
+
 .f90.o:
 	$(FC) -c $(FC_FLAGS) $< -I $(MODDIR) -o $@
 

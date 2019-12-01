@@ -108,12 +108,12 @@
            ygw(i,j)= yg(i,j)*grw(i,j)
         End do; End do
 
-!   ... form the vector of inner products of the radial function 
+!   ... form the vector of inner products of the radial function
 !   ... and the new spline basis functions:
 
          Call VINTY (ygw,v)
 
-!   ... solve the system of equations  Sb x = cb:  
+!   ... solve the system of equations  Sb x = cb:
 
          !Print '(10X,A,A/(5D15.5))', 'RHS expansion for',el(iel),v
          v(1) = 0.d0

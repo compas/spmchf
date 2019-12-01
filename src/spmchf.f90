@@ -17,18 +17,18 @@
 !       write_mchf_param
 !
 !   Written by:  by Charlotte  Froese Fischer
-!   Date:        April, 2010 
-!                                                                
+!   Date:        April, 2010
+!
 !----------------------------------------------------------------------
 !
     USE mchf_inout
     USE mchf_param
     IMPLICIT NONE
-   
+
 
     ! read Command-Line arguments
     CALL read_CL_param
-    
+
     CALL open_files
 
     ! .. read parameters (optional) or set defaults
@@ -56,5 +56,5 @@
 
     End DO
     Call write_mchf_param        ! for rerunning the highest level
-    
+
   END PROGRAM Spline_MCHF

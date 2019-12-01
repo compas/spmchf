@@ -24,7 +24,7 @@
       h=0.25; ks=4; ns= 30+ 4*sqrt(z)
 !     h=0.25; ks=4; ns= 32+ 2*sqrt(z)
 !     h=0.5; ks=4; ns= 15
-  
+
      ! Read optional user defined values
      INQUIRE(FILE='mchf_param', OPENED=connected)
 
@@ -35,8 +35,8 @@
         If (line1(1:4) /= 'MCHF') &
             Stop 'First line of mchf_param does not start with MCHF'
         Read(iup,'(A)')  line2
-    
-        Do 
+
+        Do
          call get_next
          if (ios /= 0) EXIT
          select case (trim(var))
@@ -46,7 +46,7 @@
          end select
         END DO
      END IF
-   
+
      ! over-ride with Command-Line arguments
      if (CL_h  > 0) h  = CL_h
      if (CL_ns > 0) ns = CL_ns
@@ -54,21 +54,21 @@
 
      call mkgrid(z)
 
-     
+
     CONTAINS
  !======================================================================
     SUBROUTINE get_next
  !======================================================================
     IMPLICIT NONE
- 
+
     INTEGER ::  i,ii
- 
+
     Read(iup,'(A)',IOSTAT=ios) line
     IF (ios /= 0) Return
-    i = INDEX(line,'=')  
+    i = INDEX(line,'=')
     var = trim(adjustl(line(1:i-1)))
     value = adjustl(line(i+1:))
-    
+
    END subroutine get_next
    END SUBROUTINE get_spline_param
 

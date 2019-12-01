@@ -5,7 +5,7 @@
 !     Given the type of integral, the index of the integral,
 !     determine -- kv, iel1, iel2, iel3, iel4
 !-----------------------------------------------------------------------
-!  
+!
         USE mchf_atomic_state, ONLY: nclosd
         USE angular_data,      ONLY: kval
         IMPLICIT NONE
@@ -13,7 +13,7 @@
         INTEGER, INTENT(OUT) :: kv, iel1, iel2, iel3, iel4
 !
 !      ... unpack the electron data
-!      
+!
           !print *, 'unpacki', int, i, kv
           kv = kval(i)
           if (int .le. 3 .or. int .eq. 6) then

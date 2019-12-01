@@ -6,11 +6,11 @@
 !      . orbitals 1:nf are fixed orbitals (not varied)
 !      . orbitals nf+1:nv  are varied,
 !      . orbitals nv+1:nwf are fixed
-!    Matrices: 
+!    Matrices:
 !      . hd -- second order variations (banded matrix)
-!         . hda(ns,ks,1:nf,nf+1:nv)  (interaction of first fixed 
+!         . hda(ns,ks,1:nf,nf+1:nv)  (interaction of first fixed
 !                                     with varied)
-!         . hdb(ns,ks,nf+1:nv,nf+1:nwf) (interaction of varied with 
+!         . hdb(ns,ks,nf+1:nv,nf+1:nwf) (interaction of varied with
 !                              varied and remaining fixed orbitals)
 !      . hx -- second order variations (full matrix)
 !         . aa (nf+1:nv,  nf+1,nv)
@@ -29,16 +29,16 @@
       USE orbitals
 
       IMPLICIT NONE
-  
+
       INTEGER, INTENT(IN) :: n1, n2
-  
+
       REAL(KIND=8), DIMENSION(:,:,:,:), ALLOCATABLE :: hda, hdb, hx, hm
       REAL(KIND=8), DIMENSION(:,:), ALLOCATABLE      :: rhs
       REAL(KIND=8), DIMENSION(:), ALLOCATABLE       :: res, work_nr
-      REAL(KIND=8), DIMENSION(:,:), ALLOCATABLE      :: aa  
+      REAL(KIND=8), DIMENSION(:,:), ALLOCATABLE      :: aa
       INTEGER, DIMENSION(:), ALLOCATABLE            :: ipiv
       INTEGER :: iwork_nr
- 
+
 
       REAL(KIND=8), EXTERNAL               :: a, b, bvmv, bhl, fk, gk, rk
       REAL(KIND=8), DIMENSION(ns)          :: x, y, v
@@ -46,7 +46,7 @@
       REAL(KIND=8), DIMENSION(ns,ks)       :: d, dsum
       REAL(KIND=8), DIMENSION(n1+1:n2,nwf) :: eij
       REAL(KIND=8)                         ::  c, cc, ccc, e11, e22
-      
+
       INTEGER :: mm, k, ms, info, i, j, ip, jp, nns, nd, nnd, north, &
                  i1, i2, i3, i4, kv, ibegin, iend, itmp, ic, &
                  ib, ie, jb, je, ii, jj
@@ -68,7 +68,7 @@
            end if
         End do
       End do
-     
+
       nns = (ns)*(n2-n1)
       nnd = nns + (n2-n1)
       nd = nnd + north
@@ -78,7 +78,7 @@
       aa=0; res=0; ipiv=0;
 
       ! create the gradient (hd)  and Hessian (hm+hx) matrix
-      
+
       ! contributions from the closed shells
       call closed_shells
 
@@ -106,13 +106,13 @@
 
       ! check the  matrix
       !call hm_check
- 
+
        ! solve the Newton Raphson hm equations
       Call hm_solve
 
       ! update and test the solutions
       Call hm_update
-      
+
       deallocate(hda, hdb, hx, hm, rhs)
       deallocate(aa, res, work_nr, ipiv)
    CONTAINS
@@ -135,18 +135,18 @@
              call density(ns,ks,d,p(:,i), p(:, i), 's', ms)
              call density(ns,ns,dx,p(:,i), p(:, i), 'x', ms)
              c = qsum(i)*(qsum(i)-1)
-             ! direct 
+             ! direct
              do k = 0, 2*l(i), 2
                if (k == 0) then
                   cc = c
-               else 
+               else
                   cc = -c*ca(l(i),k)
                end if
                call add_rkm_d(k,cc*d,hdb(:,:,i,i))
                call add_rkm_x(k,2*cc*dx,hx(:,:,i,i))  ! i=j
 
              end do
-           else 
+           else
              ! direct    F0(i,j)  i <j, k=0 of j < ib < i
              k=0
              c = qsum(i)*qsum(j)
@@ -155,7 +155,7 @@
              call add_cont('x',2*c,k,i, j, i, j, 'Closed')
 
              !  exchange Gk(i,j)
-             do k = abs(l(i)-l(j)), l(i)+l(j),2   
+             do k = abs(l(i)-l(j)), l(i)+l(j),2
                 c = -qsum(i)*qsum(j)*cb(l(i), l(j), k)
 
                 call add_cont('d', c, k, i, j, i, j, 'Closed')
@@ -167,7 +167,7 @@
            end if
         end do
       end do
-      
+
       end subroutine closed_shells
 
 !==================================================================
@@ -186,11 +186,11 @@
         call unpacki(6,ip, kv, i1, i2, i3, i4)
         Print '(A,5I4,F9.5)', 'I: ip, i1, i2, i3, i4', &
                                ip, i1, i2, i3, i4, coef(ip)
-        
+
         call hlm(l(i1))
         c = -2*coef(ip)
         cc = c
-        if (i1 /= i2) cc = cc/2 
+        if (i1 /= i2) cc = cc/2
         if (i1 > n1 .and. i1 <= n2 ) then
            hdb(:,:,i1,i2) = hdb(:,:,i1,i2) -cc*hl/2
         else if (i1 <= n1 .and. i2 <= n2 ) then
@@ -209,11 +209,11 @@
         else if (i1 <= n1 .and. i2<=n2 ) then
           call add_rkm_d(0, dsum, hda(:,:, i1,i2))
         end if
-        
+
          ! Direct contribution to core from (i1,i2)
         Do jp = 1, nclosd     ! Rk(jp,i1;jp,i2) == Rk(i1,jp;i2,jp)
 
-          cc = qsum(jp)*c 
+          cc = qsum(jp)*c
           call add_cont('d', cc,  0, i1, i2, jp, jp, 'Closed_I')   !hd(jp, jp)
           if (i1 == i2) then
              call add_cont('x',2*cc, 0, jp, i2, jp, i1, 'Closed_I')   !hx(jp,i1)
@@ -225,8 +225,8 @@
 
       !  exchange contributions  from  Rk(jp, jp; i1, i2)
         do jp = 1,nclosd                             !   Rk(i1,jp;jp,i2)
-          do k = abs(l(i1)-l(jp)), l(i1)+l(jp), 2  
-  
+          do k = abs(l(i1)-l(jp)), l(i1)+l(jp), 2
+
             cc = 2*cb(l(i1), l(jp), k)*qsum(jp)*coef(ip)
 
             if (i1 == i2) then
@@ -243,14 +243,14 @@
               call add_cont('x', cc, k, i2, jp, jp, i1, 'Closed_I')
               call add_cont('x', cc, k, i1, jp, jp, i2, 'Closed_I')
               call add_cont('x', cc, k, jp, jp, i1, i2, 'Closed_I')
- 
+
             end if
 
           end do
         end do
       end do
 
-      end subroutine I_integrals        
+      end subroutine I_integrals
 
 !==================================================================
       SUBROUTINE F_integrals
@@ -269,7 +269,7 @@
         Print '(A,5I4,F9.5)', 'F: ip, i1, i2, i3, i4', &
                                ip, i1, i2, i3, i4, coef(ip)
         c = coef(ip)
- 
+
         if (i1 == i2 )then
           call add_cont('d', 2*c, kv, i1, i1, i1, i1, 'F_int') ! hd(i1,i1)
           call add_cont('x', 4*c, kv, i1, i1, i1, i1, 'F_int') !hx(i1,i1)
@@ -278,7 +278,7 @@
           call add_cont('d',   c, kv, i1, i1, i2, i2, 'F_int') !hd(i2,i2)
           call add_cont('x', 2*c, kv, i1, i2, i1, i2, 'F_int') !hx(i1,i2)
         end if
-          
+
       end do
       end subroutine F_integrals
 
@@ -300,14 +300,14 @@
         c = coef(j)
 
         call add_cont('d', c, kv, i1, i2, i1, i2, 'G-int')  ! hd(i1,i2)
-        call add_cont('x', c, kv, i2, i2, i1, i1, 'G-int')  !hx(i1,i1)       
+        call add_cont('x', c, kv, i2, i2, i1, i1, 'G-int')  !hx(i1,i1)
         call add_cont('x', c, kv, i2, i1, i1, i2, 'G-int')  !hx(i1,i2)
-        call add_cont('x', c, kv, i1, i1, i2, i2, 'G-int')  !hx(i2,i2)       
-        
+        call add_cont('x', c, kv, i1, i1, i2, i2, 'G-int')  !hx(i2,i2)
+
       end do
 
      end subroutine G_integrals
-!     
+!
 !==================================================================
        SUBROUTINE R_integrals
 !==================================================================
@@ -332,7 +332,7 @@
                                j, ir(1:4), coef(j)
 
         c = coef(j)
-       
+
        ! get case selector
        symm = 'abcd'
        do ii = 1,3
@@ -343,7 +343,7 @@
        print *, 'Ir:', ir, symm
 
        select case ( symm )
-        case('aaaa') 
+        case('aaaa')
           call add_cont('d',2*c,kv,ir(1),ir(1), ir(1), ir(1),'R_int')
           call add_cont('x',4*c,kv,ir(1),ir(1), ir(1), ir(1),'R_int')
 
@@ -402,7 +402,7 @@
           call add_cont('d',c  ,kv,ir(1),ir(3), ir(2), ir(2),'R_int')
           call add_cont('x',c,  kv,ir(3),ir(2), ir(1), ir(2),'R_int')
           call add_cont('x',c,  kv,ir(2),ir(1), ir(2), ir(3),'R_int')
-        
+
         case('abcc')
           call add_cont('d',c/2,kv,ir(2),ir(3), ir(1), ir(3),'R_int')
           call add_cont('d',c/2,kv,ir(1),ir(3), ir(2), ir(3),'R_int')
@@ -425,8 +425,8 @@
         END SELECT
 
       end do
-      end subroutine r_integrals      
-            
+      end subroutine r_integrals
+
 !==================================================================
       SUBROUTINE hm_residuals
 !==================================================================
@@ -450,7 +450,7 @@
         do j = n1+1,nwf
           if (j<i) then
             call bxv(ks,ns,hdb(:,:,j,i),p(:,j),y)
-          else    
+          else
             call bxv(ks,ns,hdb(:,:,i,j),p(:,j),y)
           end if
           rhs(:,i) = rhs(:,i) +y
@@ -464,7 +464,7 @@
           end if
         end do
         ib = ib+ns; ie = ie+ns
-      end do  
+      end do
 
       write(50, *) 'Energy matrix before symmetrization: All_NR'
       do i = n1+1, n2
@@ -501,7 +501,7 @@
       do i = n1+1, n2
         jb = 1; je = ns
         Do j = 1,nwf
-          if (i == j .or.  abs(e(i,j)) > 1.d-12) then  
+          if (i == j .or.  abs(e(i,j)) > 1.d-12) then
             if (j <= n1 .or. j >n2 ) then    ! orthogonality to fixed
                call bxv(ks,ns,sb,p(:,j),y)
                y(1)=0; y(ns-1:ns) =0
@@ -531,7 +531,7 @@
       end do
 
       END SUBROUTINE hm_residuals
-       
+
     !==================================================================
       SUBROUTINE hm_norm
     !==================================================================
@@ -541,7 +541,7 @@
       INTEGER :: ib, iib, ie, jb, je
       ! generate  upper part of aa(1:nns:1:nns) = hm + hx
       ! could also use
-      
+
       ! aa could be reshaped from the hm has block structure
        ib = 1; ie = ns
        do i  = n1+1, n2
@@ -565,7 +565,7 @@
         res(mm) = 0.d0   ! since all current orbitals are normalized
         ib = ib+ns; ie = ie+ns
       end do
-       
+
       END SUBROUTINE hm_norm
 
     !==================================================================
@@ -574,7 +574,7 @@
     !   Add orthogonality constraint to assure the change is orthogonal
     !   to a given orbital
     !------------------------------------------------------------------
-       
+
        !Add orthogonality constraints
        !  If (l(i) = l(j))
        ib=1; ie=ns
@@ -630,12 +630,12 @@
               do ii = ib, ie
                 write(52,'(8F12.6)') aa(ii,jb:je)
               end do
-              jb = jb+ns; je=je+ns             
+              jb = jb+ns; je=je+ns
            end do
          ! Check the residuals
            Print *, 'a^t,res(a)', dot_product(p(:,i),res(ib:ie))
            Print *, 'Norm(1):', dot_product(p(:,i),aa(ib:ie,mm)), mm
-           ib = ib+ns; ie=ie+ns             
+           ib = ib+ns; ie=ie+ns
         end do
         mm = ns*(n2-n1)
         write(52, *) 'Orthonormality'
@@ -652,7 +652,7 @@
         write(52,FMT='(8F12.6)') aa(1,:)
 
         END SUBROUTINE hm_check
-       
+
     !==================================================================
        SUBROUTINE hm_solve
     !==================================================================
@@ -673,7 +673,7 @@
         STOP
        End if
 
-       END SUBROUTINE hm_solve    
+       END SUBROUTINE hm_solve
 
     !==================================================================
        SUBROUTINE hm_update
@@ -712,14 +712,14 @@
        CHARACTER(LEN=*), INTENT(IN) :: name
 
        INTEGER :: itmp
-  
+
        if (i3 > i4) then
          itmp = i3; i3=i4; i4=itmp
          itmp = i1; i1=i2; i2=itmp
        end if
-      
+
        if (i3 > n2 .or. (i3 <= n1 .and. i4 > n2))  return
- 
+
        ! print '(A,1X,A,F12.9,5I3)','T, c,k,i1,i2,i3,i4', &
        !                              Type, c,k, i1,i2,i3,i4
        if (type == 'd') then
@@ -750,6 +750,6 @@
        end if
 
        END SUBROUTINE add_cont
-     END SUBROUTINE some_nr 
+     END SUBROUTINE some_nr
 
 

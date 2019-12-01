@@ -3,11 +3,11 @@
 !=======================================================================
 !
 !   This routine is a modification of de Boor's bvalue routine, modified
-!   to return the value at right endpoint continuous from the left, 
+!   to return the value at right endpoint continuous from the left,
 !   instead of 0. It assumes the usual knot multiplicity ks at the right
 !   endpoint.
 !
-!   It calculates the value at  x of the jderiv-th derivative of spline 
+!   It calculates the value at  x of the jderiv-th derivative of spline
 !   from b-repr. The spline is taken to be continuous from the right.
 !
 !   SUBROUTINES contained:
@@ -23,7 +23,7 @@
 !       ns     length of  bcoef, assumed positive.
 !       ks     order of the spline .
 !
-!             . . . W A R N I N G . . .   
+!             . . . W A R N I N G . . .
 !       The restriction  ks <= kmax (=15)  is imposed
 !       arbitrarily by the parameter statement defining dimensions
 !       for aj, dm, dp  below, but is  NEVER CHECKED.
@@ -85,7 +85,7 @@
     REAL(KIND=8) :: fkmj
     INTEGER :: i, mflag, km1, jcmin, imk, nmi, jcmax, jc
     INTEGER :: j, jj, kmj, ilo
- 
+
     bvalu2 = 0.d0
     IF (jderiv >= ks) RETURN
 
@@ -117,7 +117,7 @@
 
     jcmin = 1
     imk = i - ks
-    IF (imk < 0) THEN   
+    IF (imk < 0) THEN
       jcmin = 1 - imk
       do j=1,i
         dm(j) = x - t(i+1-j)
@@ -134,7 +134,7 @@
 
     jcmax = ks
     nmi = ns - i
-    IF (nmi < 0) THEN  
+    IF (nmi < 0) THEN
       jcmax = ks + nmi
       do j=1,jcmax
         dp(j) = t(i+j) - x
@@ -147,7 +147,7 @@
       do j=1,km1
         dp(j) = t(i+j) - x
       end do
-    END IF    
+    END IF
       do jc=jcmin,jcmax
         aj(jc) = bcoef(imk + jc)
       end do
@@ -182,7 +182,7 @@
     bvalu2 = aj(1)
 
     CONTAINS
-    
+
     !=======================================================================
       SUBROUTINE interv (x, left, mflag)
     !=======================================================================
@@ -234,7 +234,7 @@
         IMPLICIT NONE
         REAL(KIND=8), INTENT(IN) :: x
         INTEGER, INTENT(OUT) :: left, mflag
- 
+
         ! .. local variables
 
         INTEGER:: lxt, ihi, istep, middle
@@ -247,12 +247,12 @@
             mflag = 1
             left = lxt
             RETURN
-          END IF      
+          END IF
 
           IF (lxt <= 1) THEN
             mflag = -1
             left = 1
-            RETURN       
+            RETURN
           END IF
           ilo = lxt - 1
           ihi = lxt
@@ -263,12 +263,12 @@
             mflag = 0
             left = ilo
             RETURN
-          END IF        
+          END IF
 
           ! .. now x < t(ilo), decrease  ilo  to capture  x.
 
           istep = 1
-          DO 
+          DO
             ihi = ilo
             ilo = ihi - istep
             IF (ilo <= 1 ) EXIT
@@ -281,7 +281,7 @@
             IF (x < t(1)) THEN
               mflag = -1
               left = 1
-              RETURN        
+              RETURN
             END IF
           END IF
         ELSE
@@ -301,23 +301,23 @@
             IF (x >= t(lxt)) THEN
               mflag = 1
               left = lxt
-              RETURN      
+              RETURN
             END IF
             ihi = lxt
-          END IF  
+          END IF
         END IF
 
         ! .. now t(ilo) <= x < t(ihi), narrow the interval.
 
-        DO 
+        DO
           middle = (ilo + ihi)/2
-          IF (middle == ilo) THEN 
+          IF (middle == ilo) THEN
             mflag = 0
-            left = ilo      
+            left = ilo
             EXIT
           END IF
 
-          ! .. note: it is assumed that middle = ilo in case ihi = ilo+1 
+          ! .. note: it is assumed that middle = ilo in case ihi = ilo+1
 
           IF (x >= t(middle)) THEN
             ilo = middle

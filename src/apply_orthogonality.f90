@@ -21,7 +21,7 @@
         END DO
 
         call bxv(ks,ns,sb,v,z)
-   
+
         DO i = 2,ns-2
           DO j = 2,ns-2
             cc(i,j) = cc(i,j) -v(i)*z(j)
@@ -33,6 +33,6 @@
 
         hfm = MATMUL(cc,hfm)
         rhs = MATMUL(cc,rhs)
-   
+
 
        END SUBROUTINE apply_orthogonality

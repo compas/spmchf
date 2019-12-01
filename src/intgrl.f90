@@ -30,7 +30,7 @@
       end if
       read(iuy) string
 
-      do while (maxorb > 0) 
+      do while (maxorb > 0)
         read(iuy) string
         maxorb = maxorb - 24
       end do
@@ -43,7 +43,7 @@
       !  read for each block
       do iblock = 1, nblock
         if (hmx_memory) then
-          write(ih_file,'(I2.2)') iblock 
+          write(ih_file,'(I2.2)') iblock
           open(iih,file='ih.'//ih_file//'.lst',status='old', &
                form='unformatted');
           nij = 0;
@@ -61,19 +61,19 @@
       ib2 = ib2 + ncol
       close (iih);
       end do
-      
+
         nij = 0
- 
+
 ! ***** READ  THE LIST OF INTEGRALS
- 
+
         lasti = 0
-        
+
 !          ...F, G, R, or L integrals....
       DO INT = 1,4
         icount = 1
         read(iuy) itype, nint
 
-!       .. ipackn of nonh is called kval here 
+!       .. ipackn of nonh is called kval here
 !       .. integral pack number and logical variable indicating usage
         read(iuy) (kval(i),i=lasti+1,nint), &
                   (lused(i),i=lasti+1,nint)
@@ -88,14 +88,14 @@
       intptr(5) = intptr(3)
       intptr(4) = intptr(2)
       intptr(3) = intptr(2)
-       
+
       if (clst_memory) then
         ibe = 0;
         do iblock = 1, nblock
           print *, 'iblock, cf_tot, nocdim', iblock, cf_tot(iblock), ncodim
           n_left = cf_tot(iblock)
           if (cf_tot(iblock) > ncodim) then
-            n_read = ncodim; 
+            n_read = ncodim;
           else
             n_read = cf_tot(iblock);
           end if
@@ -110,7 +110,7 @@
           end do
        !print *, 'Intgrl: inptr, coeff'
        !print '(8i10)',(inptr(i),i=1,n_read)
-       !print '(4F12.8)', (coeff(i),i=1,n_read) 
+       !print '(4F12.8)', (coeff(i),i=1,n_read)
        end do
       end if
       end SUBROUTINE INTGRL

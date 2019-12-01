@@ -98,7 +98,7 @@
        jpimid = jpimid+1
       END DO
       ideriv = ideriv-1
-      jhigh = kp1-ideriv	
+      jhigh = kp1-ideriv
       CALL vbsplvb(kg,ni,x,jhigh,2,dbiatx)
     END DO
 
@@ -110,7 +110,7 @@
 
     jlow = 1
     DO i = 1,ks
-      w31(1:ni,jlow:ks,i) = 0.d0	
+      w31(1:ni,jlow:ks,i) = 0.d0
       jlow = i
       w31(1:ni,i,i) = 1.d0
     END DO
@@ -268,7 +268,7 @@
           DO i=1,ni
             deltar(i,j)=t(i+kg-1+j)-x(i)
             deltal(i,j)=x(i)-t(i+kg-j)
-          END DO 	
+          END DO
 
           DO m=1,j
             DO i=1,ni

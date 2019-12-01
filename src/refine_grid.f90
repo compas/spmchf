@@ -1,6 +1,6 @@
 !  Routines for refining the grid
 !  . refine_grid
-!  . reset_int    
+!  . reset_int
 !==================================================================
     SUBROUTINE  refine_grid
     !==================================================================
@@ -29,7 +29,7 @@
       allocate(p2(ns2,nwf),t2(nt2))
       p2 = p; t2=t
       h2 = h; hmax2=hmax; rmax2=rmax
-      
+
       !define new spline parameters
       h = h/2
       ks = ks + 4
@@ -37,18 +37,18 @@
       !print *, 'maxval(maxr(:))', maxval(maxr(:))
       ns = 2*min((maxval(maxr(:))+1),ns)+6
       !Print *, 'New value of ns:', ns
-      call mkgrid(z) 
+      call mkgrid(z)
       scf_tol = scf_tol/10000
       orb_tol = orb_tol/1000
       end_tol = end_tol/1000
-      
+
       ! .. for the current nwf and new ns
       CALL allocate_orbital_arrays
       Call define_spline
-      
+
       ! transform the orbitals to the new basis
       Allocate(yg(nv,ks),ygw(nv,ks), v(ns), bsf(ks,ns))
-      
+
       write(UNIT=scr,FMT='(/7X,A)') 'Refined grid orbitsl'
       do m = 1,nwf
         !Print *, 'Orbital ', el(m)
@@ -61,13 +61,13 @@
            ygw(i,j)= yg(i,j)*grw(i,j)
         End do; End do
 
-!   ... form the vector of inner products of the radial function 
+!   ... form the vector of inner products of the radial function
 !   ... and the new spline basis functions:
 
          Call VINTY (ygw,v)
 
-!   ... solve the system of equations  Sb x = cb:  
-   
+!   ... solve the system of equations  Sb x = cb:
+
          !Print '(10X,A,A/(5D14.5))', 'RHS expansion for',el(m),v
          v(1) = 0.d0
          Do i = ns-1,ns/2,-1
@@ -88,14 +88,14 @@
          write(UNIT=err,FMT='(10X,A/I6)') &
              'refine_grid: dpbtrs (LAPACK) error No: ', ierr
          end if
-         Call dpbtrs ('U',ns,ks-1,1,bsf,ks,v,ns,ierr)  
+         Call dpbtrs ('U',ns,ks-1,1,bsf,ks,v,ns,ierr)
          if(ierr.ne.0) then
          write(UNIT=err,FMT='(10X,A/I6)') &
              'refine_grid: dpbtrs (LAPACK) error No: ', ierr
          end if
 
 !   ... find tail of function and remove too small values
-                                                
+
          Do i=ns,1,-1
           if(abs(v(i)) > 1.d-10) Exit
          End do
@@ -105,7 +105,7 @@
 
          sm = 0.d0; rd = 0
          Do i=1,nv; Do j=1,ks
-           ss = bvalu2(t,p(:,m),ns,ks,gr(i,j),0) 
+           ss = bvalu2(t,p(:,m),ns,ks,gr(i,j),0)
            if(abs(ss-yg(i,j)).lt.sm) Cycle
            sm = abs(ss-yg(i,j))
            rd = gr(i,j)
@@ -129,8 +129,8 @@
     USE spline_hl
     USE spline_integrals
     USE spline_moments
-   
-    lh    = -1   
+
+    lh    = -1
     itype = 'aaa'
     krk   = -100
     mtype = 'aaa'

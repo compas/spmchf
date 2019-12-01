@@ -59,16 +59,16 @@
       ! .. now we know nwf, allocate memory
       call allocate_atomic_state
       call alloc_wt
-    
+
       el(1:nwf) = elc(1:nwf)
- 
+
       ! .. store properites of the closed shells
       lmax=0; SS = 0
       DO i = 1,nwf
         Call el_nl(el(i),n(i),l(i))
         lmax = max(l(i),lmax)
         if (i <= nclosd) then
-          qsum(I) = 2*(2*L(I)+1) 
+          qsum(I) = 2*(2*L(I)+1)
           clsd(i) = .true.
           s(i) = SS + qsum(i)/2
           SS = SS + qsum(i)
@@ -84,7 +84,7 @@
         end if
       END DO
       kmax = 2*lmax
- 
+
       ! Determine Lagrange multiplier structure
       ! and list of orbitals involved
       DO i = 1,nwf
@@ -102,7 +102,7 @@
              END IF
           End do
        End DO
-    
+
       form="(17X,'Core =',5(1X,A3,'(',I4,')')/(23X,5(1X,A3,'(',I4,')')))"
       WRITE (UNIT=err,FMT="(//7X,'MCHF WAVE FUNCTIONS FOR  ',A6,' Z =',F5.1,/)") &
                   ATOM, Z
@@ -119,7 +119,7 @@
 
       ! .. order the orbitals by n and l
       iord = 0
-      DO i = 1, NWF 
+      DO i = 1, NWF
          IORD(i) = i
       END DO
       ! We only need shells of the same angular quantum number ordered
@@ -201,9 +201,9 @@
       ! Set weights, normalized
       eigst_weight = eigst_wt(1:meig,1:nblock)/sum(eigst_wt(1:meig,1:nblock))
       leigen = leig(1:meig, 1:nblock)
-      
+
      END SUBROUTINE get_eigenstates
- 
+
 !======================================================================
      SUBROUTINE get_varied
 !======================================================================
@@ -214,41 +214,41 @@
      USE cl_arguments
      IMPLICIT NONE
      LOGICAL :: done
-     
+
      vary(1:nwf) = .false.
      INQUIRE(Unit=iup, OPENED=connected)
      If (.not. connected) then
         varied1 = 'all'; varied2= 'all'
      END IF
-      
-     IF (varied1(1:3)=='ALL' .OR. varied1(1:3)=='all') THEN 
-         NIT1 = NWF 
-     ELSE IF (varied1(1:4)=='NONE' .OR. varied1(1:4)=='none') THEN 
-         NIT1 = 0 
-     ELSE IF (INDEX(varied1,'=') /= 0) THEN 
-         J = INDEX(varied1,'=') 
-         READ (varied1(J+1:), *) NIT1 
+
+     IF (varied1(1:3)=='ALL' .OR. varied1(1:3)=='all') THEN
+         NIT1 = NWF
+     ELSE IF (varied1(1:4)=='NONE' .OR. varied1(1:4)=='none') THEN
+         NIT1 = 0
+     ELSE IF (INDEX(varied1,'=') /= 0) THEN
+         J = INDEX(varied1,'=')
+         READ (varied1(J+1:), *) NIT1
      END IF
 
-     IF (varied2(1:3)=='ALL' .OR. varied2(1:3)=='all') THEN 
-         NIT2 = NWF 
-     ELSE IF (varied2(1:4)=='NONE' .OR. varied2(1:4)=='none') THEN 
-         NIT2 = 0 
-     ELSE IF (INDEX(varied2,'=') /= 0) THEN 
-         J = INDEX(varied2,'=') 
-         READ (varied2(J+1:), *) NIT2 
+     IF (varied2(1:3)=='ALL' .OR. varied2(1:3)=='all') THEN
+         NIT2 = NWF
+     ELSE IF (varied2(1:4)=='NONE' .OR. varied2(1:4)=='none') THEN
+         NIT2 = 0
+     ELSE IF (INDEX(varied2,'=') /= 0) THEN
+         J = INDEX(varied2,'=')
+         READ (varied2(J+1:), *) NIT2
      END IF
 
      End subroutine get_varied
 
      END SUBROUTINE get_atom
 !=======================================================================
-  SUBROUTINE eptr(el, elsymb, iel, nwf) 
+  SUBROUTINE eptr(el, elsymb, iel, nwf)
 !=======================================================================
 !
 !   Determines the position of the electron in the electron list
 !   Zero if not found.
-!      
+!
 !----------------------------------------------------------------------
 !
     IMPLICIT NONE

@@ -2,7 +2,7 @@
       subroutine solve_MCHF_equations
 !=====================================================================
 !
-!  Solve the MCHF equations 
+!  Solve the MCHF equations
 !------------------------------------------------------------------
       USE spline_param, ONLY: h,hmax,rmax,ns,ks,ml
       USE spline_galerkin, ONLY: sb,bb
@@ -33,14 +33,14 @@
         REAL(KIND=8), INTENT(out) :: eii
        END SUBROUTINE  scf_nr
 
-       SUBROUTINE scf_matrix(i,hfm, hx, rhs) 
+       SUBROUTINE scf_matrix(i,hfm, hx, rhs)
          USE spline_param
          USE mchf_atomic_state
          USE orbitals
          USE spline_hl
          USE av_energy
          USE angular_data, coef => value
-         
+
          IMPLICIT NONE
          REAL(KIND=8), DIMENSION(ns,ns),INTENT(out) :: hfm, hx
          REAL(KIND=8), DIMENSION(ns),INTENT(out)    :: rhs
@@ -48,7 +48,7 @@
        END SUBROUTINE scf_matrix
 
       End Interface
-      
+
       REAL(KIND=8), DIMENSION(ns,ns) :: hfm, hx
       REAL(KIND=8), DIMENSION(ns,ns) :: aa
       REAL(KIND=8), DIMENSION(ns) :: eigval
@@ -99,7 +99,7 @@
          dpm = 1.d0
       end if
       call scf_phase
-       
+
        nit = nit2
        ! update all orbitals simultaneously using a Newton Raphson method
       if ( nit == nwf) then
@@ -145,12 +145,12 @@
     !------------------------------------------------------------------
 
         IMPLICIT NONE
-      
+
       converged = .false.
       nit = nit1
       vary = .true.
       if (nit < nwf)  vary(1:nwf-nit) = .false.
-      
+
       et = etotal
       Do it = 1, max_it1
         write(6,'(/7X,A,I2.2/7X,A/)') 'Iteration 1.',it,'----------------'
@@ -178,12 +178,12 @@
              end if
 
            end do
-           
+
            call scf_matrix(i,hfm, hx, rhs)
            !if (it ==1 .or. abs( qsum(i) -1.d0)  < 0.5 .or. dpm(i) > 0.5) then
            if (it ==1 .or. abs( qsum(i) -1.d0)  < 0.001 .or. dpm(i) > 0.5) then
 	     call scf_eiv('V')
-           else 
+           else
              md = ns+1+north
              v = p(:,i)                         ! needed for hf_nr
              call scf_nr(i,north,jorth,hfm,bb,hx,rhs,md,v,eii)
@@ -195,9 +195,9 @@
            end do
            maxr(i)=min(ns,j+1)
            v(j+1:ns) = 0.d0
-           p(:,i) =v(:)             
+           p(:,i) =v(:)
            lp = l(i)+1
-           az(i) = p(lp+1,i)*azl(z,h,ks,lp) 
+           az(i) = p(lp+1,i)*azl(z,h,ks,lp)
            WRITE(scr,'(10X,A3,F20.12,F18.10,1P,D12.2,I8)') &
                  el(i), e(i,i), az(i), dpm(i), maxr(i)
          end do
@@ -232,7 +232,7 @@
     !------------------------------------------------------------------
 
       IMPLICIT NONE
-     
+
       vary = .true.
       if (nit < nwf)  vary(1:nwf-nit) = .false.
 
@@ -286,14 +286,14 @@
              et = etotal
          End if
       End do
-     
+
       END SUBROUTINE NR_phase
 
     !==================================================================
         SUBROUTINE scf_eiv(type)
     !==================================================================
-    !    Find the eigenvector of hfm for the m'th eigenvalue after 
-    !    orthogonality has been applied. 
+    !    Find the eigenvector of hfm for the m'th eigenvalue after
+    !    orthogonality has been applied.
     !    For type = 'V', one eigenvector is selected
     !------------------------------------------------------------------
 
@@ -306,7 +306,7 @@
         REAL(KIND=8), DIMENSION(3*ns) :: W
         REAL(KIND=8) :: c
         INTEGER :: j, jp, INFO
-    
+
       Do jp = 1,north
          j = jorth(jp)
          call apply_orthogonality(hfm,rhs, p(:,j))
@@ -323,8 +323,8 @@
       print *, 'eii, rhs', eii, dot_product(p(:,i), rhs)
 
       eii = eii + dot_product(p(:,i), rhs)
-      print *, 'eii+ rhs', eii 
-        
+      print *, 'eii+ rhs', eii
+
       ! .. evaluates the eigenvalues and eigenvectors
       call dsygv(1,'V','L',ns,aa,ns,ss,ns,eigval,W,3*ns,INFO)
       ! .. the eigenvectors are now in aa
@@ -338,16 +338,16 @@
 
       if (type /= 'V') return
 
-      if (maxval(abs(rhs(2:ns-2))) < orb_tol ) then     
+      if (maxval(abs(rhs(2:ns-2))) < orb_tol ) then
          v(1:ns) = aa(1:ns,1+m)
          if (v(ml) < 0.d0) v = -v
          e(i,i) = eigval(1+m)
       else
-         
+
          v = 0.d0
          do jp = 2,ns-2
            cv(jp) = 0.d0
-           ! because the orthogonality transformation moves the eigenvalue to 
+           ! because the orthogonality transformation moves the eigenvalue to
            ! zero, it is necessary to skip near zero eigenvectors.
            if (abs(eigval(jp)) > scf_tol ) then
              cv(jp)= dot_product(aa(2:ns-2,jp), rhs(2:ns-2))/(eigval(jp)-eii)
@@ -359,7 +359,7 @@
          e(i,i) = eii
          call normalize(v)
       end if
-         
+
       END SUBROUTINE  scf_eiv
 
     !==================================================================

@@ -5,7 +5,7 @@
 !   Parameters for solving the HF equations
 !     Tests for convergence:
 !     . scf_tol :  relative change in the total energy
-!     . orb_tol :  maximum change in an orbital relative to its 
+!     . orb_tol :  maximum change in an orbital relative to its
 !                  maximum value
 !     . cfg_tol :  maximum change in mixing coefficient
 !     . end_tol :  values in the tail all less than this value in
@@ -16,7 +16,7 @@
 !
 !--------------------------------------------------------------------
     IMPLICIT NONE
-   
+
     CHARACTER(LEN=4) :: varied1 ='all', varied2='all'
     CHARACTER(LEN=80):: vstring =' '
     REAL(KIND=8)     :: scf_tol=1.d-11, &

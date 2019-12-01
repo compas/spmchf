@@ -10,7 +10,7 @@
 !     Alternatively, we could use the "sum" rule but compute lagrange multipliers
 !     at the beginning of very iteration sot that the same lagrange multiplier is
 !     use for each orbital pair.
-!     
+!
 !     ie: compute vectors HP_i and RHS_i  for orbital pairs
 !     Hv(i) = H P_i -RHS_i,
 !-----------------------------------------------------------------------
@@ -21,9 +21,9 @@
       USE av_energy
       USE angular_data, coef => value
       USE mchf_inout
-      
+
       IMPLICIT NONE
-      REAL(KIND=8), DIMENSION(ns,nwf) :: hfv 
+      REAL(KIND=8), DIMENSION(ns,nwf) :: hfv
 
       REAL(KIND=8), EXTERNAL :: fk, gk, bhl, rk
       REAL(KIND=8), DIMENSION(ns,ks) :: hd, d, dsum
@@ -32,27 +32,27 @@
       INTEGER :: i, ii, j, jp, jv, jbegin, k,kv, i1,i2,i3,i4,itmp, ms
 
      print *, '------------- Entering lagrange ----------------'
-     hfv = 0.d0; dsum =0.d0; hd=0; 
+     hfv = 0.d0; dsum =0.d0; hd=0;
      e11 = 0.d0; e22 = 0.d0
 
      call Icore
 
-     call from_I_integrals    
+     call from_I_integrals
 
-     call from_F_integrals   
+     call from_F_integrals
 
-     call from_G_integrals  
+     call from_G_integrals
 
-     call from_R_integrals 
-     
-     print *, 'Calling compute_lagrange'   
+     call from_R_integrals
+
+     print *, 'Calling compute_lagrange'
      call compute_lagrange
-     
+
    CONTAINS
 !=====================================================================
       subroutine Icore
 !=====================================================================
-!     contributions to hfv from closed shells 
+!     contributions to hfv from closed shells
 !---------------------------------------------------------------------
       IMPLICIT NONE
 
@@ -62,7 +62,7 @@
          call bxv(ks, ns, hd,p(:,i), y)
          hfv(:,i) = hfv(:,i) +y
       end do
-         
+
       do j = 1, nclosd
         ! direct k = 0
         hd = 0.d0
@@ -78,8 +78,8 @@
           hfv(:,i) = hfv(:,i) + c*y
         end do
       end do
-      
-      ! direct k >0 
+
+      ! direct k >0
       hd = 0.d0
       do i = 1,nclosd
         if (l(i) > 0) then
@@ -92,9 +92,9 @@
           hfv(:,i) = hfv(:,i) + y
         end if
       end do
-          
-      ! exchange              
-      do i = 1,nclosd         
+
+      ! exchange
+      do i = 1,nclosd
         do j = i+1,nclosd
           hd = 0.d0
           call density(ns,ks,d,p(:,j), p(:,i), 's', ms)
@@ -128,7 +128,7 @@
         ! contribution to i1 and i2
         call Ivalcore
        end do
-     
+
        end subroutine from_I_integrals
 !=====================================================================
       subroutine Icoreval
@@ -137,7 +137,7 @@
 !     related to outer I-integrals (i1,i2)  (i < nclosd)
 !---------------------------------------------------------------------
       IMPLICIT NONE
-      
+
       ! direct k = 0   Rk(.,i1;.,i2,0)
       ! effect on core
       hd = 0.d0
@@ -151,7 +151,7 @@
       end do
 
       ! exchange        Rk(i,i1;i2,i)
-      
+
       do i = 1, nclosd
          call density(ns,ks,d,p(:,i1), p(:,i), 's', ms)
          do k = abs(L(i)-L(i1)), L(i)+L(i1), 2
@@ -171,7 +171,7 @@
 !---------------------------------------------------------------------
      IMPLICIT NONE
      REAL(KIND=8)        :: fk, gk
- 
+
      call hlm(l(i1))
      c = coef(jp)
      if (i1 /= i2) c = c/2
@@ -210,7 +210,7 @@
         end if
 
       end if
-          
+
       ! exchange        Rk(i1,j;j,i2)
      do ii = 1,2
      do j = 1,nclosd
@@ -233,16 +233,16 @@
      end if
 
      end do
-  
+
      end subroutine Ivalcore
 !=====================================================================
       subroutine from_F_integrals
 !=====================================================================
-!     contributions to hfv F-integrals that are stored in order of 
+!     contributions to hfv F-integrals that are stored in order of
 !     increasing k
 !---------------------------------------------------------------------
       IMPLICIT NONE
-  
+
        jbegin=1
        do jp = jbegin,intptr(1)
          if (.not. lused(jp)) cycle
@@ -272,7 +272,7 @@
       IMPLICIT NONE
       INTEGER :: im
 
-     ! Add exchange contribution 
+     ! Add exchange contribution
       jbegin=intptr(1)+1
       do jp = jbegin, intptr(2)
        if (.not. lused(jp)) cycle
@@ -324,10 +324,10 @@
            end if
         end do
      end do
-   
+
 
      end subroutine from_R_integrals
-            
+
 !=====================================================================
       subroutine compute_lagrange
 !=====================================================================
@@ -336,12 +336,12 @@
       IMPLICIT NONE
       REAL(KIND=8), DIMENSION(nwf,nwf) :: eij
       REAL(KIND=8) :: eav, e1a, e1b, e1c, e2a, e2b, e11, e22
-      
+
       eij = 0.d0
       do i = 1,nwf
         do j = 1, nwf
          if ( i /= j .and. (clsd(i) .and. clsd(j)) ) cycle
-          if (l(i) == l(j)) eij(i,j) = dot_product(hfv(:,i), p(:,j)) 
+          if (l(i) == l(j)) eij(i,j) = dot_product(hfv(:,i), p(:,j))
         end do
       end do
          write(50,*) 'Energy matrix before symmetrization: SCF'
@@ -369,7 +369,7 @@
           end do
           e(i,i) = eij(i,i)
       end do
-    
+
      ! print *, 'Energy matrix After symmetriztion and closed shell consideration'
      ! do i = 1,nwf
      !   Print '(A,I4,(8F15.8))', 'Row i=', i, eij(i,:)

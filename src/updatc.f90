@@ -13,13 +13,13 @@
       USE mchf_atomic_state,  ONLY: qsum, clsd, l
       USE block_param
       USE dvdson_param
- 
+
       IMPLICIT NONE
 
       INTEGER, INTENT(IN) :: iblock, ivs, ncfg1, maxev, ijp, nz
       INTEGER, INTENT(OUT):: max_col, nijcurr
       LOGICAL, INTENT(IN) :: last
-      
+
       INTEGER,     DIMENSION(:), pointer    :: jptrp, ihh, icop
       REAL(KIND=8),DIMENSION(:), pointer    :: wtt
       REAL(KIND=8),DIMENSION(:),allocatable :: coef_tmp
@@ -39,7 +39,7 @@
       end if
 
       nijcurr = 1; iih = 1 ; nij_tmp = 1; jjh = 1  ; max_col = 1;
-      n_count_tmp = 0; 
+      n_count_tmp = 0;
       if (iblock == 1) ncoef = 0;
       !        .. add contribution from this record to coef
       !        .. make use of the fact that all coefficients are read in
@@ -61,7 +61,7 @@
                if (leigen(j,iblock)) then
                  wcoef = eigst_weight(j,iblock)
                  W = wcoef*wtt(ibv+iih)*wtt(ibv+jjh)
-                 T = W*coeff(n_count_tmp) 
+                 T = W*coeff(n_count_tmp)
                  IF (IIH .NE. JJH) T = T+T
                  coef(inptr(n_count_tmp)) = coef(inptr(n_count_tmp)) + T
                  if (last) then
@@ -70,20 +70,20 @@
                    IF (IIH .NE. JJH) T0 = T0 + T0;
                    itmp_s = (inptr(n_count_tmp))+idim*im1;
                    coef_tmp(itmp_s) = coef_tmp(itmp_s) + T0;
-                   im1 = im1 + 1;                
+                   im1 = im1 + 1;
                  end if
                  ibv = ibv + ncfg1
-               end if 
-             end do 
+               end if
+             end do
  	 !    if (inptr(i) .gt. intptr(5)) then
          ! print '(2I4,3F15.10,I6,F15.10,i6)', &
          !iih,jjh,wtt(iih+ibv),wtt(jjh+ibv),coeff(n_count_tmp), &
          !inptr(n_count_tmp), coef(inptr(n_count_tmp)),nijcurr
   	! end if
       end do
- 
+
       ncoef = ncoef + cf_tot(iblock);
-     
+
       if (last) then
          im2 = 0;
          do im1 = 1,maxev
@@ -93,7 +93,7 @@
              im2 = im2 + 1;
            end if
          end do
-         deallocate(coef_tmp); 
+         deallocate(coef_tmp);
       end if
 !
 !  *****  DEFINE qSUM(I)
@@ -108,13 +108,13 @@
               if ( abs(qsum(iel1) - 2*(2*l(iel1)+1)) <= 1.0D-5) &
                    clsd(iel1) = .true.
            end if
-         end do 
+         end do
 
         !print *, 'Node:',' intptr(6)',intptr(6), 'iblock',iblock
         !print '(4f20.16)', (coef(i),i=1,intptr(6))
         print '(A,(4F20.16))', 'QSUM:', qsum
-        print *, 'CLSD:', clsd 
-        
+        print *, 'CLSD:', clsd
+
 
    CONTAINS
 
@@ -127,7 +127,7 @@
       USE mchf_atomic_state
       USE block_param
       USE angular_data
-      
+
       IMPLICIT NONE
       INTEGER, INTENT(IN) :: ieigval, iblock
       REAL(KIND=8), INTENT(OUT) :: ss
@@ -135,7 +135,7 @@
 
       INTEGER :: i, ibegin, iend, j, k, kv, iel1, iel2, iel3, iel4
       REAL(KIND=8) :: rmean1, rmean2, R_R, sumi, sumj, rr1, gr1, c
-!    
+!
 
       WRITE(log,'(//15X,A/)')  'Some WaveFunction Properties'
       rmean1 = 0.d0
@@ -154,9 +154,9 @@
         sumi = 4*L(i)+2
         Do J =  1,I-1
           sumj = 4*L(j)+2
-          DO K=IABS(L(I)-L(J)),L(I)+L(J),2 
-            IF (K.EQ.1) THEN            
-              C= -CB(L(I),L(J),K)           
+          DO K=IABS(L(I)-L(J)),L(I)+L(J),2
+            IF (K.EQ.1) THEN
+              C= -CB(L(I),L(J),K)
 !             .. this minus is from exchange term
               SS = SS - C*SUMI*SUMJ*GRAD(I,J)**2
 	      R_R = R_R + c*SUMI*SUMJ*quadr(i,j,1)**2
@@ -210,8 +210,8 @@
           SUMJ=4*L(J)+2
           RR1 = 0.d0
           GR1 = 0.d0
-          DO K=IABS(L(iel1)-L(J)),L(iel1)+L(J),2 
-              IF (K.EQ.1) THEN        
+          DO K=IABS(L(iel1)-L(J)),L(iel1)+L(J),2
+              IF (K.EQ.1) THEN
                 C= -CB(L(IEL1),L(J),K)
                 IF (IEL1 .EQ. IEL2 ) THEN
 !                    .. we have a diagonal case
@@ -228,7 +228,7 @@
 !    :		     GRAD(IEL1,J)*GRAD(J,IEL2)
                   ENDIF
                ENDIF
-         END DO          
+         END DO
             SS = SS + SUMI*SUMJ*GR1
             R_R = R_R + SUMI*SUMJ*RR1
         END DO
@@ -236,10 +236,10 @@
 
 !     Change sign of SS to adhere to our definition
       SS = - SS
-      write (log,'(A8,1X,A3)')  '    Term ', term_bl(iblock)     
+      write (log,'(A8,1X,A3)')  '    Term ', term_bl(iblock)
       WRITE(log,'(A,F15.8)') '    Mean radius             =', rmean1
       WRITE(log,'(A,F15.8)') '    Mean square radius      =', rmean2
-      WRITE(log,'(A,F15.8)') '    Mean R.R parameter      =', rmean2 + 2*r_r 
+      WRITE(log,'(A,F15.8)') '    Mean R.R parameter      =', rmean2 + 2*r_r
       WRITE(log,'(A,F15.8)') '    Isotope Shift parameter =', SS
       END SUBROUTINE prprty
       END  SUBROUTINE updatc_memory_all

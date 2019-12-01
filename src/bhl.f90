@@ -8,7 +8,7 @@
 
       USE spline_param
       USE mchf_atomic_state
-      USE orbitals 
+      USE orbitals
       USE spline_hl
 
       IMPLICIT NONE

@@ -11,14 +11,14 @@
       USE dvdson_param
       IMPLICIT NONE
       Logical, INTENT(IN) :: last
- 
+
       INTEGER :: ivs, ijp, nz, ibe, ncoef, iblock, max_col, nijcurr, i, &
                  ies, unit_n
       CHARACTER(LEN=5) :: name_dotL
-       
+
       ivs = 1; ijp = 1; nz  = 1
       ibe = 0; ncoef = 0;
-      
+
 !<<<<<<<<<<<<<<<<<<<updatc>>>>>>>>>>>>>>>>>>>>>>>>>>>.
       do iblock = 1,nblock
          ncfg = ncfg_bl(iblock)
@@ -28,7 +28,7 @@
          end if
          !ivs = ivs + ncfg*nume(iblock)
          ivs = ivs + ncfg*niv_bl(iblock)
-         ijp = ijp + ncfg_bl(iblock) 
+         ijp = ijp + ncfg_bl(iblock)
          nz = nz + nze_bl(iblock)
       end do
 !<<<<<<<<<<<<<<<<<<end updatc>>>>>>>>>>>>>>>>>>>>>>>>>>>>

@@ -82,7 +82,7 @@
 
     USE spline_param
     USE spline_grid
-    !USE mchf_atomic_state, ONLY: z, 
+    !USE mchf_atomic_state, ONLY: z,
     USE spline_hl
 
     IMPLICIT NONE

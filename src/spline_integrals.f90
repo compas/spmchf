@@ -1,4 +1,4 @@
-!====================================================================    
+!====================================================================
     MODULE spline_integrals
 !====================================================================
 !
@@ -23,7 +23,7 @@
     INTEGER(4) :: krk = -100, krk_min, krk_max
 
     CHARACTER(3) :: itype='aaa'
-    
+
     REAL(8), DIMENSION(:,:,:,:), POINTER :: rkb
     INTEGER, ALLOCATABLE :: irka(:)
     REAL(8), ALLOCATABLE, TARGET :: rka(:,:,:,:,:)
@@ -31,9 +31,9 @@
     END MODULE spline_integrals
 
 
-!====================================================================    
+!====================================================================
       SUBROUTINE allocate_rka(kmin, kmax)
-!====================================================================    
+!====================================================================
 !
 ! ... allocates space for spline integrals
 !
@@ -48,15 +48,15 @@
       if (associated(rkb)) nullify(rkb)
 
       if (allocated(irka)) Deallocate (irka,rka)
-      
+
       ALLOCATE(rka(ns,ns,ks,ks,kmin:kmax), irka(kmin:kmax))
       irka = -1; krk_min=kmin; krk_max=kmax; krk=-100
 
       END SUBROUTINE allocate_rka
 
-!====================================================================    
+!====================================================================
       SUBROUTINE dealloc_integrals
-!====================================================================    
+!====================================================================
 !
 ! ... deallocates arrays in module "spline_integrals"
 !

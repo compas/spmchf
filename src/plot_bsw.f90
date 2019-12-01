@@ -1,13 +1,13 @@
 !======================================================================
     Subroutine plot_bsw(nu)
 !======================================================================
-! .. Computes and tabular the radial in all gausian points, plus border 
+! .. Computes and tabular the radial in all gausian points, plus border
 ! .. values, for further plots
 !----------------------------------------------------------------------
 
     Use spline_param
     Use spline_grid
-    Use mchf_atomic_state 
+    Use mchf_atomic_state
     Use orbitals
 
     IMPLICIT NONE
