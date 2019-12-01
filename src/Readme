@@ -1,0 +1,14 @@
+
+The Makefile assumes environment variables have been defined  for
+
+	FC 		the name of the compiler 
+	FC_FLAGS 	the compiler flags
+	FC_LD		the loader flags
+        LAPACK_DIR	location of LAPACK and BLAS libraries
+
+The "make" command compiles the executable in the current directory
+
+
+
+Charlotte Froese Fischer
+September, 2010
