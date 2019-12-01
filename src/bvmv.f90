@@ -1,5 +1,5 @@
 !=====================================================================
-    FUNCTION bvmv(n,k,array,type,x,y)
+    FUNCTION bvmv(n, k, array, type, x, y)
 !=====================================================================
 !
 !   Returns bvmv = <x,array y> for the band array.
@@ -25,50 +25,50 @@
 !
 !----------------------------------------------------------------------
 
-    REAL(KIND=8) :: bvmv
-    INTEGER, INTENT(in) :: n, k
-    CHARACTER(LEN=1), INTENT(in) :: type
-    REAL(KIND=8), DIMENSION(n,*), INTENT(in) :: array
-    REAL(KIND=8), DIMENSION(n), INTENT(in) :: x, y
+       REAL(KIND=8) :: bvmv
+       INTEGER, INTENT(in) :: n, k
+       CHARACTER(LEN=1), INTENT(in) :: type
+       REAL(KIND=8), DIMENSION(n, *), INTENT(in) :: array
+       REAL(KIND=8), DIMENSION(n), INTENT(in) :: x, y
 
-    ! .. Local variables
+       ! .. Local variables
 
-    INTEGER :: i,j,jp,kp
+       INTEGER :: i, j, jp, kp
 
-    bvmv = 0.d0
+       bvmv = 0.d0
 
-    if ( type /= 'g') then
+       if (type /= 'g') then
 
-      ! .. symmetric
+          ! .. symmetric
 
-      do jp = 1,k-1
-        do i = k+1-jp,n
-          j = i+jp-k
-          bvmv = bvmv + array(i,jp) * (x(i)*y(j) + x(j)*y(i))
-        end do
-      end do
+          do jp = 1, k - 1
+             do i = k + 1 - jp, n
+                j = i + jp - k
+                bvmv = bvmv + array(i, jp)*(x(i)*y(j) + x(j)*y(i))
+             end do
+          end do
 
-      ! .. make correction for 'a' (almost symmetric)
+          ! .. make correction for 'a' (almost symmetric)
 
-      if (type == 'a')  &
-          bvmv = bvmv + x(n-1)*y(n)*(array(1,1)-array(n,k-1))
+          if (type == 'a') &
+             bvmv = bvmv + x(n - 1)*y(n)*(array(1, 1) - array(n, k - 1))
 
-    else
+       else
 
-      do jp = 1,k-1
-        do i = k-jp+1,n
-          j = i+jp-k
-          kp = 2*k-jp
-          ans = ans + array(i,jp)*x(i)*y(j)
-          ans = ans + array(j,kp)*x(j)*y(i)
-        end do
-      end do
+          do jp = 1, k - 1
+             do i = k - jp + 1, n
+                j = i + jp - k
+                kp = 2*k - jp
+                ans = ans + array(i, jp)*x(i)*y(j)
+                ans = ans + array(j, kp)*x(j)*y(i)
+             end do
+          end do
 
-    end if
+       end if
 
-    ! .. add central diagonal
+       ! .. add central diagonal
 
-    bvmv = bvmv + SUM(array(:,k)*x(:)*y(:))
+       bvmv = bvmv + SUM(array(:, k)*x(:)*y(:))
 
-  END FUNCTION bvmv
+    END FUNCTION bvmv
 

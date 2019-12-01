@@ -25,33 +25,33 @@
 !
 !----------------------------------------------------------------------
 
-    USE spline_param
-    USE spline_grid
-    USE spline_galerkin
+       USE spline_param
+       USE spline_grid
+       USE spline_galerkin
 
-    IMPLICIT NONE
-    REAL(8), DIMENSION(ks) :: gx, gw
+       IMPLICIT NONE
+       REAL(8), DIMENSION(ks) :: gx, gw
 
-    ! .. initializes variables for gaussian integration
+       ! .. initializes variables for gaussian integration
 
-    CALL gauss(ks,gx,gw)
+       CALL gauss(ks, gx, gw)
 
-    ! .. initializes the values of the spline and its derivatives
+       ! .. initializes the values of the spline and its derivatives
 
-    CALL allocate_grid
+       CALL allocate_grid
 
-    CALL initvb
+       CALL initvb
 
-    ! .. initializes the spline array (operators in spline basis)
+       ! .. initializes the spline array (operators in spline basis)
 
-    Call allocate_galerkin
+       Call allocate_galerkin
 
-    CALL initas
+       CALL initas
 
     CONTAINS
 
 !=======================================================================
-    SUBROUTINE initvb
+       SUBROUTINE initvb
 !=======================================================================
 !
 !   Sets (or Initializes) the arrays
@@ -84,40 +84,39 @@
 !
 !-----------------------------------------------------------------------
 
-    IMPLICIT NONE
-    REAL(8), Allocatable, DIMENSION(:,:,:) :: dbiatx
-    INTEGER :: m, i
-    Allocate(dbiatx(nv,ks,ks)); dbiatx = 0.d0
+          IMPLICIT NONE
+          REAL(8), Allocatable, DIMENSION(:, :, :) :: dbiatx
+          INTEGER :: m, i
+          Allocate (dbiatx(nv, ks, ks)); dbiatx = 0.d0
 
-    Do m=1,ks
-      gr(1:nv,m)=(t(1+ks:nv+ks)-t(ks:nv+ks-1))*gx(m)+t(ks:nv+ks-1)
-      grm(1:nv,m) = 1.d0/gr(1:nv,m)
-      grw(1:nv,m)=(t(1+ks:nv+ks)-t(ks:nv+ks-1))*gw(m)
-      Call vbsplvd(t,ks,nv,gr(1,m),3,dbiatx)
-      bsp(1:nv,m,1:ks)    = dbiatx(1:nv,1:ks,1)
-      bspd(1:nv,m,1:ks,1) = dbiatx(1:nv,1:ks,2)
-      bspd(1:nv,m,1:ks,2) = dbiatx(1:nv,1:ks,3)
-      Do i = 1,ks
-       bsq(1:nv,m,i) = bspd(1:nv,m,i,1) - grm(1:nv,m)*bsp(1:nv,m,i)
-      End do
-    End do
+          Do m = 1, ks
+             gr(1:nv, m) = (t(1 + ks:nv + ks) - t(ks:nv + ks - 1))*gx(m) + t(ks:nv + ks - 1)
+             grm(1:nv, m) = 1.d0/gr(1:nv, m)
+             grw(1:nv, m) = (t(1 + ks:nv + ks) - t(ks:nv + ks - 1))*gw(m)
+             Call vbsplvd(t, ks, nv, gr(1, m), 3, dbiatx)
+             bsp(1:nv, m, 1:ks) = dbiatx(1:nv, 1:ks, 1)
+             bspd(1:nv, m, 1:ks, 1) = dbiatx(1:nv, 1:ks, 2)
+             bspd(1:nv, m, 1:ks, 2) = dbiatx(1:nv, 1:ks, 3)
+             Do i = 1, ks
+                bsq(1:nv, m, i) = bspd(1:nv, m, i, 1) - grm(1:nv, m)*bsp(1:nv, m, i)
+             End do
+          End do
 
-    ! .. store also the values at the last knot
+          ! .. store also the values at the last knot
 
-    call vbsplvd(t,ns,1,t(ns+1),3,dbiatx)
+          call vbsplvd(t, ns, 1, t(ns + 1), 3, dbiatx)
 
-    bsp(nv+1,1,1:ks)    = dbiatx(1,1:ks,1)
-    bspd(nv+1,1,1:ks,1) = dbiatx(1,1:ks,2)
-    bspd(nv+1,1,1:ks,2) = dbiatx(1,1:ks,3)
-    bsq(nv+1,1,1:ks)    = bspd(nv+1,1,1:ks,1)-bsp(nv+1,1,1:ks)/t(ns+1)
+          bsp(nv + 1, 1, 1:ks) = dbiatx(1, 1:ks, 1)
+          bspd(nv + 1, 1, 1:ks, 1) = dbiatx(1, 1:ks, 2)
+          bspd(nv + 1, 1, 1:ks, 2) = dbiatx(1, 1:ks, 3)
+          bsq(nv + 1, 1, 1:ks) = bspd(nv + 1, 1, 1:ks, 1) - bsp(nv + 1, 1, 1:ks)/t(ns + 1)
 
-    Deallocate(dbiatx)
+          Deallocate (dbiatx)
 
-    END SUBROUTINE initvb
-
+       END SUBROUTINE initvb
 
 !==================================================================
-    SUBROUTINE initas
+       SUBROUTINE initas
 !==================================================================
 !
 !   Sets ( or Initializes ) the array in symmetric storage mode:
@@ -139,94 +138,89 @@
 !
 !------------------------------------------------------------------
 
+          IMPLICIT NONE
 
-    IMPLICIT NONE
+          CALL mdb1      ! .. sets db1 --- matrix of integral <B_i,B'_j>
 
+          CALL mdb2      ! .. sets db2 --- matrix of integral <B_i,B"_j>
 
-    CALL mdb1      ! .. sets db1 --- matrix of integral <B_i,B'_j>
+          CALL mrm(0, sb)              ! .. sets sb  ---  <B_i,B_j>
 
-    CALL mdb2      ! .. sets db2 --- matrix of integral <B_i,B"_j>
+          CALL add_band_to_full(sb, bb) !    sets full matrix version of sb
 
-    CALL mrm(0, sb)              ! .. sets sb  ---  <B_i,B_j>
+          CALL facsb                   ! .. factorizes sb
 
-    CALL add_band_to_full(sb,bb) !    sets full matrix version of sb
+          CALL mrm(1, r1)              ! .. sets r1  ---  <B_i,r B_j>
 
-    CALL facsb                   ! .. factorizes sb
+          CALL mrm(-1, rm1)            ! .. sets rm1 ---  <B_i,(1/r)B_j>
 
-    CALL mrm(1, r1)              ! .. sets r1  ---  <B_i,r B_j>
+          CALL mrm(-2, rm2)            ! .. sets rm2 ---  <B_i,(1/r^2)B_j>
 
-    CALL mrm(-1, rm1)            ! .. sets rm1 ---  <B_i,(1/r)B_j>
+          CALL mrm(-3, rm3)            ! .. sets rm2 ---  <B_i,(1/r^3)B_j>
 
-    CALL mrm(-2, rm2)            ! .. sets rm2 ---  <B_i,(1/r^2)B_j>
-
-    CALL mrm(-3, rm3)            ! .. sets rm2 ---  <B_i,(1/r^3)B_j>
-
-   END SUBROUTINE initas
-
+       END SUBROUTINE initas
 
 !====================================================================
-   SUBROUTINE mdb1
+       SUBROUTINE mdb1
 !====================================================================
 !
 !  Computes the matrix elements <B_i,B'_i+j-1> in the B-spline basis
 !
 !--------------------------------------------------------------------
 
-    IMPLICIT NONE
+          IMPLICIT NONE
 
-    ! Local variables
+          ! Local variables
 
-    INTEGER :: i, irow, jcol, ith, jth
+          INTEGER :: i, irow, jcol, ith, jth
 
-    db1 = 0.d0
+          db1 = 0.d0
 
-    do ith = 1,ks
-      do jth = 1,ith
-        jcol = jth-ith+ks
-        do i = 1,nv
-          irow = i+ith-1
-          db1(irow,jcol) = db1(irow,jcol) &
-        + SUM(grw(i,:)*bsp(i,:,ith)*bspd(i,:,jth,1))
-        end do
-      end do
-    end do
+          do ith = 1, ks
+             do jth = 1, ith
+                jcol = jth - ith + ks
+                do i = 1, nv
+                   irow = i + ith - 1
+                   db1(irow, jcol) = db1(irow, jcol) &
+                                     + SUM(grw(i, :)*bsp(i, :, ith)*bspd(i, :, jth, 1))
+                end do
+             end do
+          end do
 
-  END SUBROUTINE mdb1
-
+       END SUBROUTINE mdb1
 
 !====================================================================
-   SUBROUTINE mdb2
+       SUBROUTINE mdb2
 !====================================================================
 !
 !  Computes the matrix elements <B_i,B"_i+j-1> in the B-spline basis
 !
 !--------------------------------------------------------------------
 
-    IMPLICIT NONE
+          IMPLICIT NONE
 
-    ! Local variables
+          ! Local variables
 
-    INTEGER :: i, irow, jcol, ith, jth
+          INTEGER :: i, irow, jcol, ith, jth
 
-    db2 = 0.d0
+          db2 = 0.d0
 
-    do ith = 1,ks
-      do jth = 1,ith
-        jcol = jth-ith+ks
-        do i = 1,nv
-          irow = i+ith-1
-          db2(irow,jcol) = db2(irow,jcol) &
-        + SUM(grw(i,:)*bsp(i,:,ith)*bspd(i,:,jth,2))
-        end do
-      end do
-    end do
+          do ith = 1, ks
+             do jth = 1, ith
+                jcol = jth - ith + ks
+                do i = 1, nv
+                   irow = i + ith - 1
+                   db2(irow, jcol) = db2(irow, jcol) &
+                                     + SUM(grw(i, :)*bsp(i, :, ith)*bspd(i, :, jth, 2))
+                end do
+             end do
+          end do
 
-    db2(1,1) = db2(1,1) + SUM(grw(nv,:)*bsp(nv,:,ks-1)*bspd(nv,:,ks,2))
+          db2(1, 1) = db2(1, 1) + SUM(grw(nv, :)*bsp(nv, :, ks - 1)*bspd(nv, :, ks, 2))
 
-  END SUBROUTINE mdb2
+       END SUBROUTINE mdb2
 
-
-  END SUBROUTINE define_spline
+    END SUBROUTINE define_spline
 
 !====================================================================
     SUBROUTINE facsb
@@ -239,29 +233,29 @@
 !
 !--------------------------------------------------------------------
 
-    USE spline_param
-    USE spline_grid
-    USE spline_galerkin
+       USE spline_param
+       USE spline_grid
+       USE spline_galerkin
 
-    IMPLICIT NONE
-    INTEGER :: m, ierr
+       IMPLICIT NONE
+       INTEGER :: m, ierr
 
-    ! .. copy the array, converting to row oriented band storage mode
+       ! .. copy the array, converting to row oriented band storage mode
 
-    bs = TRANSPOSE(sb)
+       bs = TRANSPOSE(sb)
 
-    ! .. apply boundary condition at r=0
+       ! .. apply boundary condition at r=0
 
-    do m = 1,ks-1
-      bs(m,ks-m+1)=0.d0
-    end do
-    bs(ks,1) = 1.d0
+       do m = 1, ks - 1
+          bs(m, ks - m + 1) = 0.d0
+       end do
+       bs(ks, 1) = 1.d0
 
-    ! .. apply boundary condition at r=rmax
-    bs(1:ks-1,ns) = 0.d0
-    bs(ks,ns)=1.d0
+       ! .. apply boundary condition at r=rmax
+       bs(1:ks - 1, ns) = 0.d0
+       bs(ks, ns) = 1.d0
 
-    Call DPBTRF('U',ns,ks-1,bs,ks,ierr)
-    if (ierr.ne.0)  Stop 'facsb: dpbtrf (LAPACK) failed'
+       Call DPBTRF('U', ns, ks - 1, bs, ks, ierr)
+       if (ierr .ne. 0) Stop 'facsb: dpbtrf (LAPACK) failed'
 
-  END SUBROUTINE facsb
+    END SUBROUTINE facsb

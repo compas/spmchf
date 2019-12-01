@@ -16,61 +16,58 @@
 !
 !--------------------------------------------------------------------
 
+       IMPLICIT NONE
+       SAVE
 
-    IMPLICIT NONE
-    SAVE
+       INTEGER(4) :: krk = -100, krk_min, krk_max
 
-    INTEGER(4) :: krk = -100, krk_min, krk_max
+       CHARACTER(3) :: itype = 'aaa'
 
-    CHARACTER(3) :: itype='aaa'
-
-    REAL(8), DIMENSION(:,:,:,:), POINTER :: rkb
-    INTEGER, ALLOCATABLE :: irka(:)
-    REAL(8), ALLOCATABLE, TARGET :: rka(:,:,:,:,:)
+       REAL(8), DIMENSION(:, :, :, :), POINTER :: rkb
+       INTEGER, ALLOCATABLE :: irka(:)
+       REAL(8), ALLOCATABLE, TARGET :: rka(:, :, :, :, :)
 
     END MODULE spline_integrals
 
-
 !====================================================================
-      SUBROUTINE allocate_rka(kmin, kmax)
+    SUBROUTINE allocate_rka(kmin, kmax)
 !====================================================================
 !
 ! ... allocates space for spline integrals
 !
 !--------------------------------------------------------------------
 
-      USE spline_param, only: ns,ks
-      USE spline_integrals
+       USE spline_param, only: ns, ks
+       USE spline_integrals
 
-      Implicit none
-      INTEGER, INTENT(in) :: kmin,kmax
+       Implicit none
+       INTEGER, INTENT(in) :: kmin, kmax
 
-      if (associated(rkb)) nullify(rkb)
+       if (associated(rkb)) nullify (rkb)
 
-      if (allocated(irka)) Deallocate (irka,rka)
+       if (allocated(irka)) Deallocate (irka, rka)
 
-      ALLOCATE(rka(ns,ns,ks,ks,kmin:kmax), irka(kmin:kmax))
-      irka = -1; krk_min=kmin; krk_max=kmax; krk=-100
+       ALLOCATE (rka(ns, ns, ks, ks, kmin:kmax), irka(kmin:kmax))
+       irka = -1; krk_min = kmin; krk_max = kmax; krk = -100
 
-      END SUBROUTINE allocate_rka
+    END SUBROUTINE allocate_rka
 
 !====================================================================
-      SUBROUTINE dealloc_integrals
+    SUBROUTINE dealloc_integrals
 !====================================================================
 !
 ! ... deallocates arrays in module "spline_integrals"
 !
 !--------------------------------------------------------------------
 
-      USE spline_integrals
+       USE spline_integrals
 
-      if (associated(rkb)) nullify(rkb)
+       if (associated(rkb)) nullify (rkb)
 
-      if(allocated(irka)) DEALLOCATE(irka,rka)
+       if (allocated(irka)) DEALLOCATE (irka, rka)
 
-      itype='aaa'
-      krk = -100
+       itype = 'aaa'
+       krk = -100
 
-      END SUBROUTINE dealloc_integrals
-
+    END SUBROUTINE dealloc_integrals
 

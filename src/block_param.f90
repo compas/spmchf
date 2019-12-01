@@ -13,18 +13,18 @@
 !   isom_shft    -- isotope shift parameter for an eigen state
 !
 !--------------------------------------------------------------------
-    IMPLICIT NONE
+       IMPLICIT NONE
 
-    INTEGER :: meig, nblock, ncfg, nze
+       INTEGER :: meig, nblock, ncfg, nze
 
-    INTEGER, DIMENSION(:), allocatable :: nze_bl, ncfg_bl, cf_tot, &
-                           nze_max, nume, niv_bl
-    REAL(KIND=8), DIMENSION(:,:), allocatable :: eigst_weight, isom_shift
-    LOGICAL,      DIMENSION(:,:), allocatable :: leigen
-    CHARACTER(LEN=3), DIMENSION(:), allocatable :: term_bl
+       INTEGER, DIMENSION(:), allocatable :: nze_bl, ncfg_bl, cf_tot, &
+                                             nze_max, nume, niv_bl
+       REAL(KIND=8), DIMENSION(:, :), allocatable :: eigst_weight, isom_shift
+       LOGICAL, DIMENSION(:, :), allocatable :: leigen
+       CHARACTER(LEN=3), DIMENSION(:), allocatable :: term_bl
 
-    REAL(KIND=8), DIMENSION(:), allocatable, target :: wt, en
-    INTEGER, DIMENSION(:), pointer      :: jptr
+       REAL(KIND=8), DIMENSION(:), allocatable, target :: wt, en
+       INTEGER, DIMENSION(:), pointer      :: jptr
 
     CONTAINS
 !====================================================================
@@ -32,13 +32,13 @@
 !====================================================================
 !      Allocate arrays that depend on the number of blocks
 !--------------------------------------------------------------------
-       IMPLICIT NONE
+          IMPLICIT NONE
 
-       if (allocated(nze_bl)) deallocate(nze_bl, ncfg_bl, cf_tot,  &
-                                         nze_max, nume, term_bl)
-       allocate(nze_bl(nblock), ncfg_bl(nblock), cf_tot(nblock),   &
-                nze_max(nblock), nume(nblock), niv_bl(nblock),     &
-                term_bl(nblock))
+          if (allocated(nze_bl)) deallocate (nze_bl, ncfg_bl, cf_tot, &
+                                             nze_max, nume, term_bl)
+          allocate (nze_bl(nblock), ncfg_bl(nblock), cf_tot(nblock), &
+                    nze_max(nblock), nume(nblock), niv_bl(nblock), &
+                    term_bl(nblock))
 
        END SUBROUTINE alloc_block
 
@@ -47,11 +47,11 @@
 !====================================================================
 !      Allocate arrays that depend on meig and the number of blocks
 !--------------------------------------------------------------------
-       IMPLICIT NONE
+          IMPLICIT NONE
 
-       allocate(eigst_weight(meig,nblock), isom_shift(meig, nblock), &
-                leigen(meig,nblock))
-       eigst_weight = 0.d0; isom_shift=0.d0
+          allocate (eigst_weight(meig, nblock), isom_shift(meig, nblock), &
+                    leigen(meig, nblock))
+          eigst_weight = 0.d0; isom_shift = 0.d0
 
        END SUBROUTINE alloc_eigenstates
 
@@ -61,14 +61,14 @@
 !      Allocate arrays for the matrix diagonalization using
 !      Dvdson
 !--------------------------------------------------------------------
-       IMPLICIT NONE
-       INTEGER :: i, j, k
+          IMPLICIT NONE
+          INTEGER :: i, j, k
 
-      i = sum(nume*ncfg_bl)
-      j = sum(ncfg_bl)
-      k = sum(niv_bl)
-      if (i.eq.1) i=2*nblock
-      allocate(wt(1:i), jptr(1:j), en(1:k))
+          i = sum(nume*ncfg_bl)
+          j = sum(ncfg_bl)
+          k = sum(niv_bl)
+          if (i .eq. 1) i = 2*nblock
+          allocate (wt(1:i), jptr(1:j), en(1:k))
 
        END SUBROUTINE alloc_wt
 

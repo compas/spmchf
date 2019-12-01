@@ -1,5 +1,5 @@
 !====================================================================
-    SUBROUTINE vinty(ygr,yv)
+    SUBROUTINE vinty(ygr, yv)
 !====================================================================
 !
 !   Computes the vector elements   <B_i, y(r)>
@@ -18,23 +18,23 @@
 !
 !--------------------------------------------------------------------
 
-    USE spline_param; USE spline_grid
+       USE spline_param; USE spline_grid
 
-    IMPLICIT NONE
+       IMPLICIT NONE
 
-    REAL(8), DIMENSION(nv,ks), INTENT(IN) :: ygr
-    REAL(8), DIMENSION(ns), INTENT(INOUT) :: yv
+       REAL(8), DIMENSION(nv, ks), INTENT(IN) :: ygr
+       REAL(8), DIMENSION(ns), INTENT(INOUT) :: yv
 
-    INTEGER :: ith, i, m
+       INTEGER :: ith, i, m
 
-    yv = 0.d0
+       yv = 0.d0
 
-    do ith = 1,ks
-      do i = 1,nv
-        do m = 1,ks
-          yv(i+ith-1) = yv(i+ith-1) + ygr(i,m)*bsp(i,m,ith)
-        end do
-      end do
-    end do
+       do ith = 1, ks
+          do i = 1, nv
+             do m = 1, ks
+                yv(i + ith - 1) = yv(i + ith - 1) + ygr(i, m)*bsp(i, m, ith)
+             end do
+          end do
+       end do
 
-  END SUBROUTINE vinty
+    END SUBROUTINE vinty

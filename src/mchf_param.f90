@@ -15,16 +15,16 @@
 !     . etl_sum :  Weighted sum of total energy (for redo)
 !
 !--------------------------------------------------------------------
-    IMPLICIT NONE
+       IMPLICIT NONE
 
-    CHARACTER(LEN=4) :: varied1 ='all', varied2='all'
-    CHARACTER(LEN=80):: vstring =' '
-    REAL(KIND=8)     :: scf_tol=1.d-11, &
-                        orb_tol=1.d-05, &
-                        cfg_tol=1.d-05, &
-                        end_tol=1.d-05, &
-                        etl_sum=0.d0
-    INTEGER          :: acc, acc_max=2
-    !INTEGER          :: acc, acc_max=2, max_it1, max_it2
+       CHARACTER(LEN=4) :: varied1 = 'all', varied2 = 'all'
+       CHARACTER(LEN=80):: vstring = ' '
+       REAL(KIND=8)     :: scf_tol = 1.d-11, &
+                           orb_tol = 1.d-05, &
+                           cfg_tol = 1.d-05, &
+                           end_tol = 1.d-05, &
+                           etl_sum = 0.d0
+       INTEGER          :: acc, acc_max = 2
+       !INTEGER          :: acc, acc_max=2, max_it1, max_it2
 
     END MODULE mchf_param

@@ -29,14 +29,14 @@
 !     . CL_ks      :  order of the B-splines
 !
 !--------------------------------------------------------------------
-    IMPLICIT NONE
+       IMPLICIT NONE
 
-    CHARACTER(LEN=2) :: CL_atom='-1'
+       CHARACTER(LEN=2) :: CL_atom = '-1'
 
-    CHARACTER(LEN=4) :: CL_varied1='-1', CL_varied2='-1'
-    REAL(KIND=8)     :: CL_scf_tol, CL_orb_tol, CL_cfg_tol, CL_end_tol, &
-                        CL_Z
-    INTEGER          :: CL_acc_max, CL_max_it1, CL_max_it2, &
-                        CL_h      , CL_ns     , CL_ks
+       CHARACTER(LEN=4) :: CL_varied1 = '-1', CL_varied2 = '-1'
+       REAL(KIND=8)     :: CL_scf_tol, CL_orb_tol, CL_cfg_tol, CL_end_tol, &
+                           CL_Z
+       INTEGER          :: CL_acc_max, CL_max_it1, CL_max_it2, &
+                           CL_h, CL_ns, CL_ks
 
     END MODULE CL_arguments

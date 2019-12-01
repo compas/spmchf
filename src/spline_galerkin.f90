@@ -7,11 +7,11 @@
 !
 !--------------------------------------------------------------------
 
-    IMPLICIT NONE
-    SAVE
+      IMPLICIT NONE
+      SAVE
 
-    REAL(KIND=8), ALLOCATABLE, DIMENSION(:,:):: r1, rm1, rm2, rm3
-    REAL(KIND=8), ALLOCATABLE, DIMENSION(:,:):: sb, bs, bb, db1, db2
+      REAL(KIND=8), ALLOCATABLE, DIMENSION(:, :):: r1, rm1, rm2, rm3
+      REAL(KIND=8), ALLOCATABLE, DIMENSION(:, :):: sb, bs, bb, db1, db2
 
 ! ...  sb (1:ns,1:ks)  -  sb (i,j) -->  <B_i|B_i+j-k>
 ! ...  r1 (1:ns,1:ks)  -  r1 (i,j) -->  <B_i|r|B_i+j-k>
@@ -26,31 +26,28 @@
 ! ...  all arrays (except bs) in the symmetric lower-columb storage
 ! ...  mode, db2 - 'almost' symmetruc, db1 - antisymmetric
 
-
-    CONTAINS
-
+   CONTAINS
 
 !====================================================================
-    SUBROUTINE allocate_galerkin
+      SUBROUTINE allocate_galerkin
 !====================================================================
 !
 !   allocates space for the arrays in the MODULE spline_galerkin
 !
 !--------------------------------------------------------------------
 
-    USE spline_param
+         USE spline_param
 
-    INTEGER :: ierr
+         INTEGER :: ierr
 
-    if(Allocated(r1)) then
-      Deallocate(r1,rm1,rm2,rm3,sb,bs,bb,db1,db2)
-    end if
-    ALLOCATE( r1(ns,ks), rm1(ns,ks), rm2(ns,ks), rm3(ns,ks), &
-              sb(ns,ks), bb(ns,ns), bs(ks,ns), db1(ns,ks), db2(ns,ks))
-    r1 = 0.d0; rm1 = 0.d0; rm2 = 0.d0; sb = 0.d0; bs = 0.d0; bb=0.d0
-	db1 = 0.d0; db2 = 0.d0
+         if (Allocated(r1)) then
+            Deallocate (r1, rm1, rm2, rm3, sb, bs, bb, db1, db2)
+         end if
+         ALLOCATE (r1(ns, ks), rm1(ns, ks), rm2(ns, ks), rm3(ns, ks), &
+                   sb(ns, ks), bb(ns, ns), bs(ks, ns), db1(ns, ks), db2(ns, ks))
+         r1 = 0.d0; rm1 = 0.d0; rm2 = 0.d0; sb = 0.d0; bs = 0.d0; bb = 0.d0
+         db1 = 0.d0; db2 = 0.d0
 
+      END SUBROUTINE allocate_galerkin
 
-    END SUBROUTINE allocate_galerkin
-
-    END MODULE spline_galerkin
+   END MODULE spline_galerkin

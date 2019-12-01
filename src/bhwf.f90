@@ -1,5 +1,5 @@
 !=======================================================================
-    SUBROUTINE bhwf(n,l,z,coef)
+    SUBROUTINE bhwf(n, l, z, coef)
 !=======================================================================
 !
 !   computes the spline expansion coefficients for hydrogenic radial
@@ -31,57 +31,55 @@
 !
 !-----------------------------------------------------------------------
 
-    USE spline_param
-    USE spline_grid
-    USE spline_galerkin
+       USE spline_param
+       USE spline_grid
+       USE spline_galerkin
 
-    IMPLICIT NONE
+       IMPLICIT NONE
 
-    INTEGER, INTENT(IN) :: n, l
-    REAL(KIND=8), INTENT(IN) :: z
-    REAL(KIND=8), DIMENSION(ns), INTENT(OUT) :: coef
+       INTEGER, INTENT(IN) :: n, l
+       REAL(KIND=8), INTENT(IN) :: z
+       REAL(KIND=8), DIMENSION(ns), INTENT(OUT) :: coef
 
-    ! .. Local variables
+       ! .. Local variables
 
-    INTEGER :: m, ierr
-    REAL(8), DIMENSION(nv,ks) :: yr, bsl(ks,ns)
+       INTEGER :: m, ierr
+       REAL(8), DIMENSION(nv, ks) :: yr, bsl(ks, ns)
 
-      ! .. obtain the values of the radial function
-      !    at all the gaussian points
-      ! .. and multiply by the gaussian weights
+       ! .. obtain the values of the radial function
+       !    at all the gaussian points
+       ! .. and multiply by the gaussian weights
 
-    do m=1,ks
+       do m = 1, ks
 
-      CALL vhwf(n,l,z,nv,gr(1,m),yr(1,m))
+          CALL vhwf(n, l, z, nv, gr(1, m), yr(1, m))
 
-      yr(:,m) = yr(:,m)*grw(:,m)
+          yr(:, m) = yr(:, m)*grw(:, m)
 
-    end do
+       end do
 
-    ! .. form the vector of inner products of the radial function and the
-    ! .. spline basis functions
+       ! .. form the vector of inner products of the radial function and the
+       ! .. spline basis functions
 
-    CALL vinty(yr,coef)
+       CALL vinty(yr, coef)
 
-    ! .. apply the boundary condition at the origin
+       ! .. apply the boundary condition at the origin
 
-    Call zfacsb(bsl,l)
+       Call zfacsb(bsl, l)
 
-    coef(1:l+1)=0.d0
+       coef(1:l + 1) = 0.d0
 
-    ! .. solve the system of equations bs coef = vy for coef
+       ! .. solve the system of equations bs coef = vy for coef
 
 !   Call dpbsl(bsl,ks,ns,ks-1,coef)   ! LINPACK
 
-    Call dpbtrs ('U',ns,ks-1,1,bsl,ks,coef,ns,ierr)
-    if(ierr.ne.0) Stop 'bhwf:  dpbtrs (LAPACK) failed'
+       Call dpbtrs('U', ns, ks - 1, 1, bsl, ks, coef, ns, ierr)
+       if (ierr .ne. 0) Stop 'bhwf:  dpbtrs (LAPACK) failed'
 
-  END SUBROUTINE bhwf
-
-
+    END SUBROUTINE bhwf
 
 !====================================================================
-    SUBROUTINE zfacsb(bsl,l)
+    SUBROUTINE zfacsb(bsl, l)
 !====================================================================
 !
 !   Sets up the overlap bs which is a transpose of sb, <B_i,B_j>,
@@ -92,43 +90,41 @@
 !
 !--------------------------------------------------------------------
 
-    USE spline_param
-    USE spline_galerkin
+       USE spline_param
+       USE spline_galerkin
 
-    IMPLICIT NONE
+       IMPLICIT NONE
 
-    INTEGER, INTENT(in) :: l
-    REAL(KIND=8), DIMENSION(ks,ns), INTENT(out) :: bsl
+       INTEGER, INTENT(in) :: l
+       REAL(KIND=8), DIMENSION(ks, ns), INTENT(out) :: bsl
 
-    ! .. local variables
+       ! .. local variables
 
-    INTEGER :: i,j,ierr
+       INTEGER :: i, j, ierr
 
-    ! .. copy the array, converting to row oriented band storage mode
+       ! .. copy the array, converting to row oriented band storage mode
 
-    bsl = TRANSPOSE(sb)
+       bsl = TRANSPOSE(sb)
 
-    ! .. apply boundary condition at r=0
+       ! .. apply boundary condition at r=0
 
-    do i = 1,l+1
-     bsl(ks,i) = 1.d0
-     do j = 1,ks-1
-       bsl(j,ks-j+i)=0.d0
-     end do
-    end do
+       do i = 1, l + 1
+          bsl(ks, i) = 1.d0
+          do j = 1, ks - 1
+             bsl(j, ks - j + i) = 0.d0
+          end do
+       end do
 
 !    CALL dpbfa(bsl,ks,ns,ks-1,ierr)
 !    if (ierr /= 0 ) STOP 'facsb: dpbfa (LINPACK) failed'
 
-    Call DPBTRF('U',ns,ks-1,bsl,ks,ierr)
-    if (ierr.ne.0)  Stop 'facsb: dpbtrf (LAPACK) failed'
+       Call DPBTRF('U', ns, ks - 1, bsl, ks, ierr)
+       if (ierr .ne. 0) Stop 'facsb: dpbtrf (LAPACK) failed'
 
-
-  END SUBROUTINE zfacsb
-
+    END SUBROUTINE zfacsb
 
 !=======================================================================
-    SUBROUTINE vhwf(n,l,z,nr,r,vh)
+    SUBROUTINE vhwf(n, l, z, nr, r, vh)
 !=======================================================================
 !
 !   This program returns the vector of values, vh(i), of a normalized
@@ -154,67 +150,65 @@
 !
 !-----------------------------------------------------------------------
 
-    IMPLICIT NONE
+       IMPLICIT NONE
 
-    INTEGER, INTENT(IN) :: n, l, nr
-    REAL(KIND=8), INTENT(IN) :: z
-    REAL(KIND=8), DIMENSION(nr), INTENT(IN) :: r
-    REAL(KIND=8), DIMENSION(nr), INTENT(OUT) :: vh
+       INTEGER, INTENT(IN) :: n, l, nr
+       REAL(KIND=8), INTENT(IN) :: z
+       REAL(KIND=8), DIMENSION(nr), INTENT(IN) :: r
+       REAL(KIND=8), DIMENSION(nr), INTENT(OUT) :: vh
 
-    ! .. Local variables
+       ! .. Local variables
 
-    INTEGER :: k, i, nm
-    REAL(KIND=8) :: a, b, c, factor
-    REAL(KIND=8), DIMENSION(nr) :: w, p
-    REAL(KIND=8), EXTERNAL :: hnorm
+       INTEGER :: k, i, nm
+       REAL(KIND=8) :: a, b, c, factor
+       REAL(KIND=8), DIMENSION(nr) :: w, p
+       REAL(KIND=8), EXTERNAL :: hnorm
 
-    k = n-l-1
-    if(k.lt.0) Stop ' vhwf:  n < l+1 '
+       k = n - l - 1
+       if (k .lt. 0) Stop ' vhwf:  n < l+1 '
 
-    factor =  hnorm(n,l,z)       ! .. gets the normalization 'factor'
+       factor = hnorm(n, l, z)       ! .. gets the normalization 'factor'
 
-    w = -2.D0*z*r/n  ! .. store the argument of the exponential factor
+       w = -2.D0*z*r/n  ! .. store the argument of the exponential factor
 
-    ! .. to avoid underlow, determine point at which function will be zero
-    ! .. Note that exp(-150) = 0.7175 10**-65
+       ! .. to avoid underlow, determine point at which function will be zero
+       ! .. Note that exp(-150) = 0.7175 10**-65
 
-    nm = nr
-    do
-      if (w(nm) < -150.D0 .AND. nm /= -1) then
-        vh(nm) = 0.D0
-        nm = nm-1
-      else
-        EXIT
-      end if
-    end do
+       nm = nr
+       do
+          if (w(nm) < -150.D0 .AND. nm /= -1) then
+             vh(nm) = 0.D0
+             nm = nm - 1
+          else
+             EXIT
+          end if
+       end do
 
-    ! .. Initialize the recurrence relation for each value of r(i)
+       ! .. Initialize the recurrence relation for each value of r(i)
 
-    p(1:nm) = 1.D0
+       p(1:nm) = 1.D0
 
-    a = 1.D0
-    b = k
-    c = n+l
+       a = 1.D0
+       b = k
+       c = n + l
 
-    ! .. Apply the recurrence relation when k is positive
+       ! .. Apply the recurrence relation when k is positive
 
-    do i = 1,k
-      p(1:nm) = 1.D0+a/b*p(1:nm)/c*w(1:nm)
-      a = a+1.D0
-      b = b-1.D0
-      c = c-1.D0
-    end do
+       do i = 1, k
+          p(1:nm) = 1.D0 + a/b*p(1:nm)/c*w(1:nm)
+          a = a + 1.D0
+          b = b - 1.D0
+          c = c - 1.D0
+       end do
 
-    ! .. Multiply the factor by the exponential
+       ! .. Multiply the factor by the exponential
 
-    vh(1:nm) = factor*p(1:nm)*EXP(w(1:nm)/2.D0)*(-w(1:nm))**(l+1)
+       vh(1:nm) = factor*p(1:nm)*EXP(w(1:nm)/2.D0)*(-w(1:nm))**(l + 1)
 
-   END SUBROUTINE vhwf
-
-
+    END SUBROUTINE vhwf
 
 !====================================================================
-    FUNCTION hnorm(n,l,Z)
+    FUNCTION hnorm(n, l, Z)
 !====================================================================
 !
 !   returns the value of the normalization constant for an
@@ -223,34 +217,34 @@
 !
 !--------------------------------------------------------------------
 
-    IMPLICIT NONE
+       IMPLICIT NONE
 
-    REAL(KIND=8) :: hnorm
-    INTEGER, INTENT(in) :: n,l
-    REAL(KIND=8), INTENT(in) :: z
+       REAL(KIND=8) :: hnorm
+       INTEGER, INTENT(in) :: n, l
+       REAL(KIND=8), INTENT(in) :: z
 
-    ! .. local variables
+       ! .. local variables
 
-    INTEGER :: m, i
-    REAL(KIND=8) :: a, b, d, t
+       INTEGER :: m, i
+       REAL(KIND=8) :: a, b, d, t
 
-    m = l+l+1
-    a = n+l
-    b = m
-    t = a
-    d = b
-    m = m-1
+       m = l + l + 1
+       a = n + l
+       b = m
+       t = a
+       d = b
+       m = m - 1
 
-    if ( m > 0) then
-      do  i = 1,m
-        a = a-1.d0
-        b = b-1.d0
-        t = t*a
-        d = d*b
-      end do
-    end if
+       if (m > 0) then
+          do i = 1, m
+             a = a - 1.d0
+             b = b - 1.d0
+             t = t*a
+             d = d*b
+          end do
+       end if
 
-    hnorm = SQRT(z*t)/(n*d)
+       hnorm = SQRT(z*t)/(n*d)
 
-  END FUNCTION hnorm
+    END FUNCTION hnorm
 

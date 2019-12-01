@@ -8,12 +8,12 @@
 !
 !--------------------------------------------------------------------
 
-     IMPLICIT NONE
-     SAVE
+        IMPLICIT NONE
+        SAVE
 
 ! .. knot sequence, t(1:ns+ks)
 
-     REAL(8), DIMENSION(:), ALLOCATABLE:: t
+        REAL(8), DIMENSION(:), ALLOCATABLE:: t
 
 ! .. arrays for spline values in gausian points
 !
@@ -26,8 +26,8 @@
 !    bsp(nv+1,1,.) and bspd(nv+1,1,.,.) - corresponding values at
 !                                         last knot point (rmax)
 
-     REAL(8), DIMENSION(:,:,:), ALLOCATABLE::   bsp, bsq
-     REAL(8), DIMENSION(:,:,:,:), ALLOCATABLE:: bspd
+        REAL(8), DIMENSION(:, :, :), ALLOCATABLE::   bsp, bsq
+        REAL(8), DIMENSION(:, :, :, :), ALLOCATABLE:: bspd
 
 ! .. arrays for gaussian data
 !
@@ -37,31 +37,29 @@
 !    grm(i,m) - reciprocal value of gr(i,m)
 !    grw(i,m) - gaussian weights at corresponding points
 
-     REAL(KIND=8), DIMENSION(:,:), ALLOCATABLE:: gr, grm, grw
-
+        REAL(KIND=8), DIMENSION(:, :), ALLOCATABLE:: gr, grm, grw
 
      CONTAINS
 
-
 !====================================================================
-      SUBROUTINE allocate_grid
+        SUBROUTINE allocate_grid
 !====================================================================
 !
 ! ... allocates space of the arrays in MODULE spline_grid
 !
 !--------------------------------------------------------------------
 
-      USE spline_param
+           USE spline_param
 
-      INTEGER(4) :: ierr
+           INTEGER(4) :: ierr
 
-      if(Allocated(bsp)) Deallocate(bsp,bsq,bspd,gr,grm,grw)
-      ALLOCATE(bsp(nv+1,ks,ks), bsq(nv+1,ks,ks), bspd(nv+1,ks,ks,2), &
-               gr(nv,ks), grm(nv,ks), grw(nv,ks))
-      bsp = 0.d0; bsq = 0.d0; bspd = 0.d0
-	  gr = 0.d0; grm = 0.d0; grw = 0.d0
+           if (Allocated(bsp)) Deallocate (bsp, bsq, bspd, gr, grm, grw)
+           ALLOCATE (bsp(nv + 1, ks, ks), bsq(nv + 1, ks, ks), bspd(nv + 1, ks, ks, 2), &
+                     gr(nv, ks), grm(nv, ks), grw(nv, ks))
+           bsp = 0.d0; bsq = 0.d0; bspd = 0.d0
+           gr = 0.d0; grm = 0.d0; grw = 0.d0
 
-      END SUBROUTINE allocate_grid
+        END SUBROUTINE allocate_grid
 
-    END MODULE spline_grid
+     END MODULE spline_grid
 

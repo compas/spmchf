@@ -25,58 +25,54 @@
 !   calculations
 !--------------------------------------------------------------------
 
-    IMPLICIT NONE
-    SAVE
+       IMPLICIT NONE
+       SAVE
 
-    INTEGER :: kmk = -100
-    CHARACTER(3) :: mtype = 'aaa'
+       INTEGER :: kmk = -100
+       CHARACTER(3) :: mtype = 'aaa'
 
-    REAL(8), ALLOCATABLE, DIMENSION(:,:,:) :: rkd
-    REAL(8), ALLOCATABLE, DIMENSION(:,:) :: rkd1, rkd2, rkd3, rkd4
+       REAL(8), ALLOCATABLE, DIMENSION(:, :, :) :: rkd
+       REAL(8), ALLOCATABLE, DIMENSION(:, :) :: rkd1, rkd2, rkd3, rkd4
 
     END MODULE spline_moments
 
-
-
 !====================================================================
-      SUBROUTINE allocate_moments
+    SUBROUTINE allocate_moments
 !====================================================================
 !
 ! ... allocates space for arrays in MODULE spline_moments
 !
 !--------------------------------------------------------------------
 
-      USE spline_param
-      USE spline_moments
+       USE spline_param
+       USE spline_moments
 
-      INTEGER :: ierr, jk
+       INTEGER :: ierr, jk
 
-      if(allocated(rkd)) DEALLOCATE(rkd, rkd1,rkd2,rkd3,rkd4)
+       if (allocated(rkd)) DEALLOCATE (rkd, rkd1, rkd2, rkd3, rkd4)
 
-      jk = ks*ks
-      ALLOCATE(rkd(jk,jk,nv), rkd1(jk,nv),rkd2(jk,nv), &
-                              rkd3(jk,nv),rkd4(jk,nv))
-      rkd = 0.d0; rkd1 = 0.d0; rkd2 = 0.d0; rkd3 = 0.d0; rkd4 = 0.d0
-      mtype='bbb'
-      kmk=-100
+       jk = ks*ks
+       ALLOCATE (rkd(jk, jk, nv), rkd1(jk, nv), rkd2(jk, nv), &
+                 rkd3(jk, nv), rkd4(jk, nv))
+       rkd = 0.d0; rkd1 = 0.d0; rkd2 = 0.d0; rkd3 = 0.d0; rkd4 = 0.d0
+       mtype = 'bbb'
+       kmk = -100
 
-      END SUBROUTINE allocate_moments
-
+    END SUBROUTINE allocate_moments
 
 !====================================================================
-      SUBROUTINE dealloc_moments
+    SUBROUTINE dealloc_moments
 !====================================================================
 !
 !     deallocate space in MODULE spline_moments
 !
 !--------------------------------------------------------------------
 
-      USE spline_moments
+       USE spline_moments
 
-      if(allocated(rkd)) DEALLOCATE(rkd, rkd1,rkd2,rkd3,rkd4)
-      mtype='aaa'
-      kmk=-100
+       if (allocated(rkd)) DEALLOCATE (rkd, rkd1, rkd2, rkd3, rkd4)
+       mtype = 'aaa'
+       kmk = -100
 
-      END SUBROUTINE dealloc_moments
-
+    END SUBROUTINE dealloc_moments
 
