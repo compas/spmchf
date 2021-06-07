@@ -1,8 +1,8 @@
 # SPMCHF
-A B-spline based MCHF code using matrix methods for solving eigenvalue problems for bound states.
+A B-spline based MCHF code using matrix methods for solving eigenvalue problems for bound states [Froese Fisher, unpublished].
 
 Charlotte Froese Fischer
-September, 2010
+2010-2021
 
 This code is "a work-in-porgress".  A this point, the effort has been to
 obtain convergence and maintain accuracy, the emphasis being accuracy.
